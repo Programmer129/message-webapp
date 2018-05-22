@@ -69,4 +69,9 @@ public class UserService {
 
         return userRegisterDTO;
     }
+
+    @Transactional
+    public User lastRecord() {
+        return userRepository.findFirstByOrderByUserIdDesc();
+    }
 }

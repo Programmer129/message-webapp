@@ -3,6 +3,8 @@ package com.springsecurity.demo.configurations;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
@@ -24,6 +26,11 @@ public class MongoTemplateConfig extends AbstractMongoConfiguration {
     @Bean
     public GridFsTemplate gridFsTemplate() throws Exception {
         return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter());
+    }
+
+    @Bean
+    public GridFSBucket getFSBucket() {
+        return GridFSBuckets.create(mongoClient().getDatabase(getDatabaseName()));
     }
 
     @Override
