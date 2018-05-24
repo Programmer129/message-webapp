@@ -1,25 +1,34 @@
 package com.springsecurity.demo.services;
 
+import com.springsecurity.demo.configurations.MongoTemplateConfig;
 import com.springsecurity.demo.dto.UserLoginDTO;
 import com.springsecurity.demo.dto.UserRegisterDTO;
 import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Objects;
 
 @Service
+@Component
 @Transactional
-public class UserService {
-
-    private static final int ROLE_ID = 2;
+public class RegisterService {
 
     private final UserRepository userRepository;
+    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MongoTemplateConfig.class);
+    private GridFsOperations gridFsOperations = (GridFsOperations) context.getBean("gridFsTemplate");
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public RegisterService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -70,8 +79,23 @@ public class UserService {
         return userRegisterDTO;
     }
 
-    @Transactional
-    public User lastRecord() {
+    private User lastRecord() {
         return userRepository.findFirstByOrderByUserIdDesc();
+    }
+
+    @Transactional
+    public UserRegisterDTO uploadFile(MultipartFile file) {
+        UserRegisterDTO user = new UserRegisterDTO();
+        User user1 = lastRecord();
+        String imgName = user1.getUserName();
+        try {
+            gridFsOperations.store(file.getInputStream(), "profile"+ imgName +".png", "image/png");
+            String imgId = gridFsOperations.findOne(new Query().addCriteria(
+                    Criteria.where("filename").is("profile"+ imgName +".png"))).getObjectId().toString();
+            user = updateUserImgId(imgId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 }
