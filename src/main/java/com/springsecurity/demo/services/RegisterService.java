@@ -1,7 +1,6 @@
 package com.springsecurity.demo.services;
 
 import com.springsecurity.demo.configurations.MongoTemplateConfig;
-import com.springsecurity.demo.dto.UserLoginDTO;
 import com.springsecurity.demo.dto.UserRegisterDTO;
 import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.repositories.UserRepository;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Objects;
 
 @Service
 @Component
@@ -30,15 +28,6 @@ public class RegisterService {
     @Autowired
     public RegisterService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Transactional
-    public User findByUserName(UserLoginDTO userDTO) {
-        User user = this.userRepository.findByUserName(userDTO.getUserName());
-        if(Objects.nonNull(user) && user.getPassword().equals(userDTO.getPassword())) {
-            return user;
-        }
-        return null;
     }
 
     @Transactional

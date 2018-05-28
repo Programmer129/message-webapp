@@ -22,6 +22,9 @@ public class UserRegisterDTO {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("isActive")
+    private Integer isActive;
+
     public String getFirstName() {
         return firstName;
     }
@@ -68,5 +71,13 @@ public class UserRegisterDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
     }
 }

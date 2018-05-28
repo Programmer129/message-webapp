@@ -43,6 +43,9 @@ public class User {
     @Column(name = "img_id")
     private String imgId;
 
+    @Column(name = "is_active")
+    private Integer isActive;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
@@ -146,5 +149,13 @@ public class User {
 
     public void setImgId(String imgId) {
         this.imgId = imgId;
+    }
+
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
     }
 }

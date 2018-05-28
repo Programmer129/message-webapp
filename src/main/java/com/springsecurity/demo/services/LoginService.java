@@ -41,11 +41,12 @@ public class LoginService {
     @Transactional
     public UserLoginDTO authenticate(UserLoginDTO loginDTO) {
         User result = this.userRepository.findByUserName(loginDTO.getUserName());
-        if(Objects.isNull(result)) {
+        if(Objects.isNull(result) || !result.getPassword().equals(loginDTO.getPassword())) {
             return new UserLoginDTO();
         }
         this.session.setAttribute("id", loginDTO.getUserName());
-        this.session.setMaxInactiveInterval(300000);
+        this.session.setMaxInactiveInterval(200);
+        result.setIsActive(1);
         UserLoginDTO userDTO = new UserLoginDTO();
         userDTO.setUserName(result.getUserName());
         userDTO.setPassword(result.getPassword());
@@ -77,7 +78,10 @@ public class LoginService {
         return Objects.nonNull(this.session.getAttribute("id"));
     }
 
+    @Transactional
     public void logOut() {
+        User result = this.userRepository.findByUserName(session.getAttribute("id").toString());
+        result.setIsActive(0);
         session.invalidate();
     }
 }
