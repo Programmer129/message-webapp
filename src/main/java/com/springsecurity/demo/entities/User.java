@@ -2,6 +2,7 @@ package com.springsecurity.demo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,8 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -50,6 +54,9 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private UserRole role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<UserMessage> messages = new HashSet<>();
 
     public User(){}
 
@@ -157,5 +164,13 @@ public class User {
 
     public void setIsActive(Integer isActive) {
         this.isActive = isActive;
+    }
+
+    public Set<UserMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<UserMessage> messages) {
+        this.messages = messages;
     }
 }
