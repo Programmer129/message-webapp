@@ -4,6 +4,7 @@ import com.springsecurity.demo.dto.UserMessageDTO;
 import com.springsecurity.demo.services.UserMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +28,8 @@ public class UserMessageController {
         return service.sendMessage(messageDTO);
     }
 
-    @GetMapping(path = "/get-messages")
-    public List<UserMessageDTO> getMessages() {
-        return service.getMessages();
+    @GetMapping(path = "/get-messages/{id}")
+    public List<UserMessageDTO> getMessages(@PathVariable int id) {
+        return service.getMessages(id);
     }
 }

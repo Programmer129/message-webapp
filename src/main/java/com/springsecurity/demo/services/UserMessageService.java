@@ -3,6 +3,7 @@ package com.springsecurity.demo.services;
 import com.springsecurity.demo.dto.UserMessageDTO;
 import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.entities.UserMessage;
+import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.UserMessageRepository;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +35,9 @@ public class UserMessageService {
 
     @Transactional
     public UserMessageDTO sendMessage(UserMessageDTO messageDTO) {
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
         UserMessage message = new UserMessage();
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
         message.setUser(user);
@@ -49,11 +55,19 @@ public class UserMessageService {
     }
 
     @Transactional
-    public List<UserMessageDTO> getMessages() {
+    public List<UserMessageDTO> getMessages(int id) {
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
-        List<UserMessage> messages = messageRepository.findByReseiverIdLike(user.getUserId());
+        List<UserMessage> messages = messageRepository.findByUserLikeAndReseiverIdLike(user, id);
+        Optional<User> byId = userRepository.findById(id);
+        List<UserMessage> messages1 = messageRepository.findByUserLikeAndReseiverIdLike(byId.get(), user.getUserId());
 
-        return messages.stream().map(this::mapToDTO).collect(Collectors.toList());
+        List<UserMessageDTO> res = messages.stream().map(this::mapToDTO).collect(Collectors.toList());
+        res.addAll(messages1.stream().map(this::mapToDTO).collect(Collectors.toList()));
+
+        return res;
     }
 
     private UserMessageDTO mapToDTO(UserMessage message) {

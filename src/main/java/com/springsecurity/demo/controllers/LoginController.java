@@ -36,9 +36,7 @@ public class LoginController {
 
     @GetMapping(path = "/log-out")
     public ResponseEntity<HttpStatus> logOut() {
-        if(loginService.isAuthenticated()){
-            loginService.logOut();
-        }
+        loginService.logOut();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

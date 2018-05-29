@@ -5,6 +5,7 @@ import com.springsecurity.demo.configurations.MongoTemplateConfig;
 import com.springsecurity.demo.dto.UserDTO;
 import com.springsecurity.demo.dto.UserLoginDTO;
 import com.springsecurity.demo.entities.User;
+import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -55,6 +56,9 @@ public class LoginService {
 
     @Transactional
     public Resource userImg() {
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
         File file = new File("/home/levani/IdeaProjects/demo/src/main/resources/profile" + session.getAttribute("id")+".png");
         Resource resource = null;
         try {
@@ -69,6 +73,9 @@ public class LoginService {
     }
 
     public UserDTO getUser() {
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
         UserDTO dto = new UserDTO();
         dto.setUserName(session.getAttribute("id").toString());
         return dto;
@@ -80,6 +87,9 @@ public class LoginService {
 
     @Transactional
     public void logOut() {
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
         User result = this.userRepository.findByUserName(session.getAttribute("id").toString());
         result.setIsActive(0);
         session.invalidate();

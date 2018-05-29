@@ -1,6 +1,7 @@
 package com.springsecurity.demo.services;
 
 import com.springsecurity.demo.entities.User;
+import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Objects;
 
 @Component
@@ -27,10 +27,10 @@ public class UserService {
 
     @Transactional
     public Iterable<User> getUsers() {
-        if(Objects.nonNull(session.getAttribute("id"))) {
-            User user = repository.findByUserName(session.getAttribute("id").toString());
-            return repository.findByUserIdNotLike(user.getUserId());
+        if (Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
         }
-        return new ArrayList<>();
+        User user = repository.findByUserName(session.getAttribute("id").toString());
+        return repository.findByUserIdNotLike(user.getUserId());
     }
 }
