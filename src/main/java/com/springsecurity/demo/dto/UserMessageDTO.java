@@ -7,7 +7,8 @@ import java.util.Date;
 
 public class UserMessageDTO {
 
-    // TODO add sender id
+    @JsonProperty("senderId")
+    private int senderId;
 
     @JsonProperty("reseiverId")
     private int reseiverId;
@@ -52,5 +53,13 @@ public class UserMessageDTO {
                 ", message='" + message + '\'' +
                 ", sendDate=" + sendDate +
                 '}';
+    }
+
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
     }
 }

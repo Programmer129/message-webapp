@@ -52,7 +52,6 @@ public class UserMessageService {
     public List<UserMessageDTO> getMessages() {
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
         List<UserMessage> messages = messageRepository.findByReseiverIdLike(user.getUserId());
-        System.out.println(messages);
 
         return messages.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
@@ -62,6 +61,7 @@ public class UserMessageService {
         messageDTO.setReseiverId(message.getReseiverId());
         messageDTO.setSendDate(message.getSendDate());
         messageDTO.setMessage(message.getMessage());
+        messageDTO.setSenderId(message.getUser().getUserId());
 
         return messageDTO;
     }
