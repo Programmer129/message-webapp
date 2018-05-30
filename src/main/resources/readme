@@ -1,0 +1,24 @@
+In this project two databases are used.
+Both are running as a docker container.
+
+1) mysql docker image.
+2) mongodb docker image.
+
+Used technologies:
+    BackEnd
+  Java SE 8
+  Java EE
+  Spring framework
+  Hibernate
+  JPA
+  JPQL
+  Maven
+  Docker
+
+    FrontEnd
+   Html 5
+   Css 3
+   Angular 4
+
+    Version Control
+  Git

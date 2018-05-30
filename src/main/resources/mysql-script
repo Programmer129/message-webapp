@@ -1,0 +1,38 @@
+create database demo;
+
+use demo;
+
+create table user(
+  user_id int primary key auto_increment,
+  user_name nvarchar(30) not null,
+  password nvarchar(30) not null,
+  role_id int
+);
+
+create table user_role(
+  role_id int primary key,
+  role_name nvarchar(30) not null
+);
+
+alter table user
+  add constraint foreign key (role_id) references user_role(role_id);
+
+alter table user
+  add email nvarchar(30);
+
+alter table user
+  add img_id nvarchar(100);
+
+alter table user
+  add is_active int;
+
+create table user_msg(
+  msg_id int primary key auto_increment,
+  user_id int,
+  receiver_id int,
+  message nvarchar(500),
+  send_date datetime
+);
+
+alter table user_msg
+  add constraint foreign key (user_id) references user(user_id);
