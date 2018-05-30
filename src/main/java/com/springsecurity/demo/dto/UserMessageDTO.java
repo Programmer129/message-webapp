@@ -16,7 +16,7 @@ public class UserMessageDTO {
     @JsonProperty("message")
     private String message;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @JsonProperty("sendDate")
     private Date sendDate;
 

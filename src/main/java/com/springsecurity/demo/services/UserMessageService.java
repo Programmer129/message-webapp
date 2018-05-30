@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,7 +68,7 @@ public class UserMessageService {
         List<UserMessageDTO> res = messages.stream().map(this::mapToDTO).collect(Collectors.toList());
         res.addAll(messages1.stream().map(this::mapToDTO).collect(Collectors.toList()));
 
-        return res;
+        return res.stream().sorted(Comparator.comparing(UserMessageDTO::getSendDate)).collect(Collectors.toList());
     }
 
     private UserMessageDTO mapToDTO(UserMessage message) {

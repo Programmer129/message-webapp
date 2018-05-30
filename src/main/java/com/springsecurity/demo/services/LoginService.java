@@ -77,7 +77,10 @@ public class LoginService {
             throw new UnauthorisedException();
         }
         UserDTO dto = new UserDTO();
-        dto.setUserName(session.getAttribute("id").toString());
+        User user = userRepository.findByUserName(session.getAttribute("id").toString());
+        dto.setUserName(user.getUserName());
+        dto.setId(user.getUserId());
+
         return dto;
     }
 
