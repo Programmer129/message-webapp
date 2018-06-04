@@ -80,6 +80,7 @@ public class LoginService {
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
         dto.setUserName(user.getUserName());
         dto.setId(user.getUserId());
+        dto.setIsUnreadMsg(user.getIsUnreadMsg());
 
         return dto;
     }

@@ -39,6 +39,7 @@ public class RegisterService {
         user.setPassword(userRegisterDTO.getPassword());
         user.setBirthDate(userRegisterDTO.getBirthDate());
         user.setEmail(userRegisterDTO.getEmail());
+        user.setIsActive(0);
 
         user = userRepository.save(user);
 

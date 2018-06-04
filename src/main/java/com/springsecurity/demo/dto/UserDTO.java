@@ -1,9 +1,15 @@
 package com.springsecurity.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserDTO {
 
+    @JsonProperty("id")
     private int id;
+    @JsonProperty("userName")
     private String userName;
+    @JsonProperty("isUnreadMsg")
+    private int isUnreadMsg;
 
     public UserDTO() {
     }
@@ -22,5 +28,13 @@ public class UserDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIsUnreadMsg() {
+        return isUnreadMsg;
+    }
+
+    public void setIsUnreadMsg(int isUnreadMsg) {
+        this.isUnreadMsg = isUnreadMsg;
     }
 }

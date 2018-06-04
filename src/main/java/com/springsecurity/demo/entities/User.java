@@ -50,6 +50,9 @@ public class User {
     @Column(name = "is_active")
     private Integer isActive;
 
+    @Column(name = "is_unread_msg")
+    private Integer isUnreadMsg;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
@@ -172,5 +175,13 @@ public class User {
 
     public void setMessages(Set<UserMessage> messages) {
         this.messages = messages;
+    }
+
+    public Integer getIsUnreadMsg() {
+        return isUnreadMsg;
+    }
+
+    public void setIsUnreadMsg(Integer isUnreadMsg) {
+        this.isUnreadMsg = isUnreadMsg;
     }
 }

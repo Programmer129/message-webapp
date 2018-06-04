@@ -41,6 +41,8 @@ public class UserMessageService {
         }
         UserMessage message = new UserMessage();
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
+        User res = userRepository.findByUserId(messageDTO.getReseiverId());
+        res.setIsUnreadMsg(1);
         message.setUser(user);
         message.setReseiverId(messageDTO.getReseiverId());
         message.setMessage(messageDTO.getMessage());
@@ -61,6 +63,7 @@ public class UserMessageService {
             throw new UnauthorisedException();
         }
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
+        user.setIsUnreadMsg(0);
         List<UserMessage> messages = messageRepository.findByUserLikeAndReseiverIdLike(user, id);
         Optional<User> byId = userRepository.findById(id);
         List<UserMessage> messages1 = messageRepository.findByUserLikeAndReseiverIdLike(byId.get(), user.getUserId());
