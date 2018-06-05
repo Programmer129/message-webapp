@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Objects;
@@ -57,6 +58,9 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private UserRole role;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserCard userCard;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserMessage> messages = new HashSet<>();
@@ -183,5 +187,13 @@ public class User {
 
     public void setIsUnreadMsg(Integer isUnreadMsg) {
         this.isUnreadMsg = isUnreadMsg;
+    }
+
+    public UserCard getUserCard() {
+        return userCard;
+    }
+
+    public void setUserCard(UserCard userCard) {
+        this.userCard = userCard;
     }
 }

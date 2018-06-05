@@ -81,6 +81,7 @@ public class LoginService {
         dto.setUserName(user.getUserName());
         dto.setId(user.getUserId());
         dto.setIsUnreadMsg(user.getIsUnreadMsg());
+        dto.setBalance(user.getUserCard().getBalance().doubleValue());
 
         return dto;
     }

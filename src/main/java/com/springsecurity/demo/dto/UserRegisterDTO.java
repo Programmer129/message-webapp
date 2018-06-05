@@ -25,6 +25,9 @@ public class UserRegisterDTO {
     @JsonProperty("isActive")
     private Integer isActive;
 
+    @JsonProperty("userCard")
+    private UserCardDTO cardDTO;
+
     public String getFirstName() {
         return firstName;
     }
@@ -79,5 +82,13 @@ public class UserRegisterDTO {
 
     public void setIsActive(Integer isActive) {
         this.isActive = isActive;
+    }
+
+    public UserCardDTO getCardDTO() {
+        return cardDTO;
+    }
+
+    public void setCardDTO(UserCardDTO cardDTO) {
+        this.cardDTO = cardDTO;
     }
 }

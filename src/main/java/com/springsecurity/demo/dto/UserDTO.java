@@ -11,6 +11,9 @@ public class UserDTO {
     @JsonProperty("isUnreadMsg")
     private int isUnreadMsg;
 
+    @JsonProperty("balance")
+    private Double balance;
+
     public UserDTO() {
     }
 
@@ -36,5 +39,13 @@ public class UserDTO {
 
     public void setIsUnreadMsg(int isUnreadMsg) {
         this.isUnreadMsg = isUnreadMsg;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 }
