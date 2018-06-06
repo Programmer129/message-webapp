@@ -1,6 +1,6 @@
 package com.springsecurity.demo.controllers;
 
-import com.springsecurity.demo.entities.User;
+import com.springsecurity.demo.dto.UserRegisterDTO;
 import com.springsecurity.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,12 @@ public class UserController {
     }
 
     @GetMapping(path = "/get-users")
-    public Iterable<User> getUsers() {
+    public Iterable<UserRegisterDTO> getUsers() {
         return service.getUsers();
+    }
+
+    @GetMapping(path = "/get-user")
+    public UserRegisterDTO getUser() {
+        return service.getUser();
     }
 }

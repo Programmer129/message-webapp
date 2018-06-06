@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserRegisterDTO {
 
+    @JsonProperty("userId")
+    private Integer userId;
+
     @JsonProperty("firstName")
     private String firstName;
 
@@ -90,5 +93,13 @@ public class UserRegisterDTO {
 
     public void setCardDTO(UserCardDTO cardDTO) {
         this.cardDTO = cardDTO;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

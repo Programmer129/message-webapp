@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Service
 @Component
@@ -52,6 +54,9 @@ public class RegisterService {
 
         UserCard userCard = new UserCard();
         UserCardDTO cardDTO = userRegisterDTO.getCardDTO();
+        cardDTO.setDateAdded(Date.valueOf(LocalDate.now()));
+        cardDTO.setDateExpire(Date.valueOf(LocalDate.now().plusYears(1)));
+        cardDTO.setBalance(50D);
 
         userCard.setCardId(cardDTO.getCardId());
         userCard.setCardType(cardDTO.getCardType());
