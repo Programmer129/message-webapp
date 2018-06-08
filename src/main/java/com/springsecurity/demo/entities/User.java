@@ -65,6 +65,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserMessage> messages = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<FavouriteFoods> favouriteFoods = new HashSet<>();
+
     public User(){}
 
     public Integer getUserId() {
@@ -103,9 +106,19 @@ public class User {
     public String toString() {
         return "User{" +
                 "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate='" + birthDate + '\'' +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", imgId='" + imgId + '\'' +
+                ", isActive=" + isActive +
+                ", isUnreadMsg=" + isUnreadMsg +
                 ", role=" + role +
+                ", userCard=" + userCard +
+                ", messages=" + messages +
+                ", favouriteFoods=" + favouriteFoods +
                 '}';
     }
 
@@ -115,14 +128,24 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(userId, user.userId) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(birthDate, user.birthDate) &&
                 Objects.equals(userName, user.userName) &&
                 Objects.equals(password, user.password) &&
-                Objects.equals(role, user.role);
+                Objects.equals(email, user.email) &&
+                Objects.equals(imgId, user.imgId) &&
+                Objects.equals(isActive, user.isActive) &&
+                Objects.equals(isUnreadMsg, user.isUnreadMsg) &&
+                Objects.equals(role, user.role) &&
+                Objects.equals(userCard, user.userCard) &&
+                Objects.equals(messages, user.messages) &&
+                Objects.equals(favouriteFoods, user.favouriteFoods);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, userName, password, role);
+        return Objects.hash(userId, firstName, lastName, birthDate, userName, password, email, imgId, isActive, isUnreadMsg, role, userCard, messages, favouriteFoods);
     }
 
     public String getFirstName() {
@@ -195,5 +218,13 @@ public class User {
 
     public void setUserCard(UserCard userCard) {
         this.userCard = userCard;
+    }
+
+    public Set<FavouriteFoods> getFavouriteFoods() {
+        return favouriteFoods;
+    }
+
+    public void setFavouriteFoods(Set<FavouriteFoods> favouriteFoods) {
+        this.favouriteFoods = favouriteFoods;
     }
 }
