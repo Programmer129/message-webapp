@@ -5,8 +5,10 @@ import com.springsecurity.demo.dto.UserCardDTO;
 import com.springsecurity.demo.dto.UserRegisterDTO;
 import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.entities.UserCard;
+import com.springsecurity.demo.entities.UserRole;
 import com.springsecurity.demo.repositories.UserCardRepository;
 import com.springsecurity.demo.repositories.UserRepository;
+import com.springsecurity.demo.repositories.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -28,20 +30,25 @@ import java.time.LocalDate;
 public class RegisterService {
 
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     private final UserCardRepository cardRepository;
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MongoTemplateConfig.class);
     private GridFsOperations gridFsOperations = (GridFsOperations) context.getBean("gridFsTemplate");
 
     @Autowired
-    public RegisterService(UserRepository userRepository, UserCardRepository cardRepository) {
+    public RegisterService(UserRepository userRepository, UserCardRepository cardRepository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.cardRepository = cardRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Transactional
     public UserRegisterDTO saveUser(UserRegisterDTO userRegisterDTO) {
         User user = new User();
 
+        UserRole role = userRoleRepository.findById(2).get();
+
+        user.setRole(role);
         user.setFirstName(userRegisterDTO.getFirstName());
         user.setLastName(userRegisterDTO.getLastName());
         user.setUserName(userRegisterDTO.getUserName());
@@ -49,6 +56,7 @@ public class RegisterService {
         user.setBirthDate(userRegisterDTO.getBirthDate());
         user.setEmail(userRegisterDTO.getEmail());
         user.setIsActive(0);
+        user.setIsUnreadMsg(0);
 
         user = userRepository.save(user);
 

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class FavouriteFoodDTO {
 
+    @JsonProperty("id")
+    private Integer id;
+
     @JsonProperty("userId")
     private Integer userId;
 
@@ -46,5 +49,13 @@ public class FavouriteFoodDTO {
                 ", foodId=" + foodId +
                 ", amount=" + amount +
                 '}';
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

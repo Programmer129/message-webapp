@@ -1,6 +1,7 @@
 package com.springsecurity.demo.services;
 
 import com.springsecurity.demo.dto.FavouriteFoodDTO;
+import com.springsecurity.demo.dto.FoodDTO;
 import com.springsecurity.demo.entities.FavouriteFoods;
 import com.springsecurity.demo.entities.Foods;
 import com.springsecurity.demo.entities.User;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Component
@@ -52,6 +55,40 @@ public class FavouriteFoodsService {
 
         foodDTO.setAmount(favouriteFoods.getAmount());
         foodDTO.setUserId(user.getUserId());
+        foodDTO.setId(favouriteFoods.getId());
+
+        return foodDTO;
+    }
+
+    @Transactional
+    public FavouriteFoodDTO deleteFromFavourite(FavouriteFoodDTO foodDTO) {
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
+        User user = userRepository.findByUserName(session.getAttribute("id").toString());
+
+        favouriteFoodsRepository.deleteById(foodDTO.getId());
+
+        foodDTO.setUserId(user.getUserId());
+
+        return foodDTO;
+    }
+
+    @Transactional
+    public List<FoodDTO> getFoods() {
+        return foodsRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    private FoodDTO mapToDTO(Foods food) {
+        FoodDTO foodDTO = new FoodDTO();
+
+        foodDTO.setId(food.getId());
+        foodDTO.setCategory(food.getCategory());
+        foodDTO.setIsImported(food.getIsImported());
+        foodDTO.setIsStock(food.getIsStock());
+        foodDTO.setName(food.getName());
+        foodDTO.setMaxStock(food.getMaxStock());
+        foodDTO.setPrice(food.getPrice());
 
         return foodDTO;
     }
