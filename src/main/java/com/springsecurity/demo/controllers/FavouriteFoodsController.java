@@ -1,5 +1,6 @@
 package com.springsecurity.demo.controllers;
 
+import com.springsecurity.demo.dto.FavouriteDTO;
 import com.springsecurity.demo.dto.FavouriteFoodDTO;
 import com.springsecurity.demo.dto.FoodDTO;
 import com.springsecurity.demo.services.FavouriteFoodsService;
@@ -29,8 +30,13 @@ public class FavouriteFoodsController {
     }
 
     @PostMapping(path = "/delete-favourite")
-    public FavouriteFoodDTO deleteFromFavourite(@RequestBody FavouriteFoodDTO favouriteFoodDTO) {
-        return favouriteFoodsService.deleteFromFavourite(favouriteFoodDTO);
+    public FavouriteDTO deleteFromFavourite(@RequestBody FavouriteDTO favouriteDTO) {
+        return favouriteFoodsService.deleteFromFavourite(favouriteDTO);
+    }
+
+    @GetMapping(path = "/get-favourite")
+    public List<FavouriteDTO> getFavouriteFoods() {
+        return favouriteFoodsService.getFavourite();
     }
 
     @GetMapping(path = "/get-foods")

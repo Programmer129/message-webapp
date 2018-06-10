@@ -1,5 +1,6 @@
 package com.springsecurity.demo.services;
 
+import com.springsecurity.demo.dto.FavouriteDTO;
 import com.springsecurity.demo.dto.FavouriteFoodDTO;
 import com.springsecurity.demo.dto.FoodDTO;
 import com.springsecurity.demo.entities.FavouriteFoods;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +54,8 @@ public class FavouriteFoodsService {
         favouriteFoods.setFoods(food);
         favouriteFoods.setUser(user);
 
-        favouriteFoods = favouriteFoodsRepository.save(favouriteFoods);
+        favouriteFoodsRepository.updateAmount(foodDTO.getAmount() + 5, user);
+        //favouriteFoods = favouriteFoodsRepository.save(favouriteFoods);
 
         foodDTO.setAmount(favouriteFoods.getAmount());
         foodDTO.setUserId(user.getUserId());
@@ -61,25 +65,47 @@ public class FavouriteFoodsService {
     }
 
     @Transactional
-    public FavouriteFoodDTO deleteFromFavourite(FavouriteFoodDTO foodDTO) {
+    public FavouriteDTO deleteFromFavourite(FavouriteDTO foodDTO) {
         if(Objects.isNull(session.getAttribute("id"))) {
             throw new UnauthorisedException();
         }
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
+        Foods food = foodsRepository.findByName(foodDTO.getName());
 
-        favouriteFoodsRepository.deleteById(foodDTO.getId());
+        List<FavouriteFoods> collect = user.getFavouriteFoods().stream()
+                .filter(a -> a.getFoods().getName().equals(foodDTO.getName()))
+                .collect(Collectors.toList());
 
-        foodDTO.setUserId(user.getUserId());
+        user.getUserCard().setBalance(BigDecimal.valueOf(user.getUserCard().getBalance().doubleValue() - foodDTO.getTotalPrice().doubleValue()));
+
+        user.getFavouriteFoods().remove(collect.get(0));
+        food.getFavouriteFoods().remove(collect.get(0));
+        favouriteFoodsRepository.deleteById(collect.get(0).getId());
 
         return foodDTO;
     }
 
     @Transactional
     public List<FoodDTO> getFoods() {
-        return foodsRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
+        return foodsRepository.findAll().stream().map(this::mapToFoodDTO).collect(Collectors.toList());
     }
 
-    private FoodDTO mapToDTO(Foods food) {
+    @Transactional
+    public List<FavouriteDTO> getFavourite() {
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
+        return userRepository
+                .findByUserName(session.getAttribute("id").toString())
+                .getFavouriteFoods().stream()
+                .map(item -> mapToFavouriteDTO(item.getFoods(), item.getAmount()))
+                .collect(Collectors.toList());
+    }
+
+    private FoodDTO mapToFoodDTO(Foods food) {
         FoodDTO foodDTO = new FoodDTO();
 
         foodDTO.setId(food.getId());
@@ -91,5 +117,15 @@ public class FavouriteFoodsService {
         foodDTO.setPrice(food.getPrice());
 
         return foodDTO;
+    }
+
+    private FavouriteDTO mapToFavouriteDTO(Foods food, Integer amount) {
+        FavouriteDTO favouriteDTO = new FavouriteDTO();
+
+        favouriteDTO.setName(food.getName());
+        favouriteDTO.setCategory(food.getCategory());
+        favouriteDTO.setTotalPrice(food.getPrice().multiply(new BigDecimal(amount)));
+
+        return favouriteDTO;
     }
 }
