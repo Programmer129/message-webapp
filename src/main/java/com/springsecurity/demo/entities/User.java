@@ -55,17 +55,17 @@ public class User {
     private Integer isUnreadMsg;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private UserRole role;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserCard userCard;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<UserMessage> messages = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<FavouriteFoods> favouriteFoods = new HashSet<>();
 
     public User(){}
@@ -103,26 +103,6 @@ public class User {
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthDate='" + birthDate + '\'' +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", imgId='" + imgId + '\'' +
-                ", isActive=" + isActive +
-                ", isUnreadMsg=" + isUnreadMsg +
-                ", role=" + role +
-                ", userCard=" + userCard +
-                ", messages=" + messages +
-                ", favouriteFoods=" + favouriteFoods +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -141,11 +121,6 @@ public class User {
                 Objects.equals(userCard, user.userCard) &&
                 Objects.equals(messages, user.messages) &&
                 Objects.equals(favouriteFoods, user.favouriteFoods);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, birthDate, userName, password, email, imgId, isActive, isUnreadMsg, role, userCard, messages, favouriteFoods);
     }
 
     public String getFirstName() {

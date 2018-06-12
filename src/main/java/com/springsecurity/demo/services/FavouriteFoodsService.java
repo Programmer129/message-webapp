@@ -6,6 +6,7 @@ import com.springsecurity.demo.dto.FoodDTO;
 import com.springsecurity.demo.entities.FavouriteFoods;
 import com.springsecurity.demo.entities.Foods;
 import com.springsecurity.demo.entities.User;
+import com.springsecurity.demo.exceptions.NotEnoughMoneyException;
 import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.FavouriteFoodsRepository;
 import com.springsecurity.demo.repositories.FoodsRepository;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +34,8 @@ public class FavouriteFoodsService {
     private final FoodsRepository foodsRepository;
 
     @Autowired
-    public FavouriteFoodsService(HttpSession session, FavouriteFoodsRepository favouriteFoodsRepository, UserRepository userRepository, FoodsRepository foodsRepository) {
+    public FavouriteFoodsService(HttpSession session, FavouriteFoodsRepository favouriteFoodsRepository,
+                                 UserRepository userRepository, FoodsRepository foodsRepository) {
         this.session = session;
         this.favouriteFoodsRepository = favouriteFoodsRepository;
         this.userRepository = userRepository;
@@ -54,10 +56,26 @@ public class FavouriteFoodsService {
         favouriteFoods.setFoods(food);
         favouriteFoods.setUser(user);
 
-        favouriteFoodsRepository.updateAmount(foodDTO.getAmount() + 5, user);
-        //favouriteFoods = favouriteFoodsRepository.save(favouriteFoods);
+        Set<FavouriteFoods> foods = user.getFavouriteFoods();
 
-        foodDTO.setAmount(favouriteFoods.getAmount());
+        boolean was = false;
+        int amount = 0;
+        for (FavouriteFoods food1 : foods) {
+            if(food1.getFoods().getId().equals(foodDTO.getFoodId())){
+                was=true;
+                amount = food1.getAmount();
+                break;
+            }
+        }
+
+        if(was) {
+            favouriteFoodsRepository.updateAmount(foodDTO.getAmount() + amount, user);
+        }
+        else {
+            favouriteFoods = favouriteFoodsRepository.save(favouriteFoods);
+        }
+
+        foodDTO.setAmount(favouriteFoods.getAmount() + amount);
         foodDTO.setUserId(user.getUserId());
         foodDTO.setId(favouriteFoods.getId());
 
@@ -75,6 +93,10 @@ public class FavouriteFoodsService {
         List<FavouriteFoods> collect = user.getFavouriteFoods().stream()
                 .filter(a -> a.getFoods().getName().equals(foodDTO.getName()))
                 .collect(Collectors.toList());
+
+        if(user.getUserCard().getBalance().doubleValue() - foodDTO.getTotalPrice().doubleValue() < 0) {
+            throw new NotEnoughMoneyException();
+        }
 
         user.getUserCard().setBalance(BigDecimal.valueOf(user.getUserCard().getBalance().doubleValue() - foodDTO.getTotalPrice().doubleValue()));
 
@@ -98,8 +120,8 @@ public class FavouriteFoodsService {
         if(Objects.isNull(session.getAttribute("id"))) {
             throw new UnauthorisedException();
         }
-        return userRepository
-                .findByUserName(session.getAttribute("id").toString())
+        User user = userRepository.findByUserName(session.getAttribute("id").toString());
+        return user
                 .getFavouriteFoods().stream()
                 .map(item -> mapToFavouriteDTO(item.getFoods(), item.getAmount()))
                 .collect(Collectors.toList());

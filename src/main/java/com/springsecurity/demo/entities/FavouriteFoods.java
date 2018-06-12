@@ -71,10 +71,4 @@ public class FavouriteFoods {
         return Objects.equals(foods, that.foods) &&
                 Objects.equals(user, that.user);
     }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(foods, user);
-    }
 }

@@ -121,23 +121,4 @@ public class UserCard {
                 Objects.equals(balance, userCard.balance) &&
                 Objects.equals(user, userCard.user);
     }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, cardId, cardType, dateAdded, dateExpire, balance, user);
-    }
-
-    @Override
-    public String toString() {
-        return "UserCard{" +
-                "id=" + id +
-                ", cardId='" + cardId + '\'' +
-                ", cardType='" + cardType + '\'' +
-                ", dateAdded=" + dateAdded +
-                ", dateExpire=" + dateExpire +
-                ", balance=" + balance +
-                ", user=" + user +
-                '}';
-    }
 }

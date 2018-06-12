@@ -66,18 +66,4 @@ public class UserRole {
                 Objects.equals(roleName, userRole.roleName) &&
                 Objects.equals(users, userRole.users);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(roleId, roleName, users);
-    }
-
-    @Override
-    public String toString() {
-        return "UserRole{" +
-                "roleId=" + roleId +
-                ", roleName='" + roleName + '\'' +
-                ", users=" + users +
-                '}';
-    }
 }

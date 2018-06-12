@@ -82,20 +82,4 @@ public class UserMessage {
                 Objects.equals(sendDate, that.sendDate) &&
                 Objects.equals(user, that.user);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(messageId, reseiverId, message, sendDate, user);
-    }
-
-    @Override
-    public String toString() {
-        return "UserMessage{" +
-                "messageId=" + messageId +
-                ", reseiverId=" + reseiverId +
-                ", message='" + message + '\'' +
-                ", sendDate=" + sendDate +
-                ", user=" + user +
-                '}';
-    }
 }

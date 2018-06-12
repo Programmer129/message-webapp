@@ -103,19 +103,6 @@ public class Foods {
     }
 
     @Override
-    public String toString() {
-        return "Foods{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", category='" + category + '\'' +
-                ", price=" + price +
-                ", isStock=" + isStock +
-                ", isImported=" + isImported +
-                ", maxStock=" + maxStock +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -127,11 +114,6 @@ public class Foods {
                 Objects.equals(isStock, foods.isStock) &&
                 Objects.equals(isImported, foods.isImported) &&
                 Objects.equals(maxStock, foods.maxStock);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, category, price, isStock, isImported, maxStock);
     }
 
     public Set<FavouriteFoods> getFavouriteFoods() {
