@@ -1,8 +1,24 @@
 In this project two databases are used.
 Both are running as a docker container.
 
-1) mysql docker image.
-2) mongodb docker image.
+To start project:
+    1) download and install docker
+    2) pull mysql: and mongodb:latest images
+    3) docker container run --name mysql -p 3306 -e MYSQL_ROOT_PASSWORD="anypassword" -d mysql:8
+       docker container run --name mongodb -p 27017 -e MONGO_INITDB_ROOT_USERNAME="anyuser" -e MONGO_INITDB_ROOT_PASSWORD="anypass
+       -e MONGO_INITDB_DATABASE="anydb -d mongodb
+    4) connect to mysql db and run mysql-script file
+    5) connect to mongodb
+    6) change application.properties settings to your database setting
+    7) download and install apache tomcat
+    8) configure apache tomcat
+    9) download and install apache maven
+    10) open project as a maven project
+    11) run mvn clean
+           mvn package
+           mvn install
+    12) run project
+
 
 Used technologies:
     BackEnd
@@ -14,6 +30,7 @@ Used technologies:
   JPQL
   Maven
   Docker
+  Maven
 
     FrontEnd
    Html 5
@@ -21,4 +38,4 @@ Used technologies:
    Angular 4
 
     Version Control
-  Git
+         Git

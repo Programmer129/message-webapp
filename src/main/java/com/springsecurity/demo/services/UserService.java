@@ -6,11 +6,13 @@ import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -69,5 +71,16 @@ public class UserService {
         userRegisterDTO.setCardDTO(cardDTO);
 
         return userRegisterDTO;
+    }
+
+    @Transactional
+    public HttpStatus updateBalance(Integer balance) {
+        if (Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
+        User user = repository.findByUserName(session.getAttribute("id").toString());
+        user.getUserCard().setBalance(BigDecimal.valueOf(balance));
+
+        return HttpStatus.OK;
     }
 }
