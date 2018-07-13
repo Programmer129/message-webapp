@@ -1,5 +1,7 @@
 package com.springsecurity.demo.entities;
 
+import lombok.Data;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +16,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "foods", schema = "demo")
 public class Foods {
@@ -46,62 +49,6 @@ public class Foods {
 
     public Foods() {}
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Integer getIsStock() {
-        return isStock;
-    }
-
-    public void setIsStock(Integer isStock) {
-        this.isStock = isStock;
-    }
-
-    public Integer getIsImported() {
-        return isImported;
-    }
-
-    public void setIsImported(Integer isImported) {
-        this.isImported = isImported;
-    }
-
-    public Integer getMaxStock() {
-        return maxStock;
-    }
-
-    public void setMaxStock(Integer maxStock) {
-        this.maxStock = maxStock;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,13 +61,5 @@ public class Foods {
                 Objects.equals(isStock, foods.isStock) &&
                 Objects.equals(isImported, foods.isImported) &&
                 Objects.equals(maxStock, foods.maxStock);
-    }
-
-    public Set<FavouriteFoods> getFavouriteFoods() {
-        return favouriteFoods;
-    }
-
-    public void setFavouriteFoods(Set<FavouriteFoods> favouriteFoods) {
-        this.favouriteFoods = favouriteFoods;
     }
 }

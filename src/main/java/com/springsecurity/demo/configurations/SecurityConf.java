@@ -24,11 +24,5 @@
 //
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        User.UserBuilder userBuilder = User.withDefaultPasswordEncoder();
-//        auth.inMemoryAuthentication()
-//                        .withUser(userBuilder
-//                        .username("avto")
-//                        .password("gameri21")
-//                        .roles("USER"));
 //    }
 //}

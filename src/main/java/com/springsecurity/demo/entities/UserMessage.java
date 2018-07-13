@@ -1,6 +1,7 @@
 package com.springsecurity.demo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 import java.util.Date;
 import java.util.Objects;
 
+@Data
 @Entity
 @Table(name = "user_msg")
 public class UserMessage {
@@ -38,38 +40,6 @@ public class UserMessage {
     private User user;
 
     public UserMessage() { }
-
-    public int getReseiverId() {
-        return reseiverId;
-    }
-
-    public void setReseiverId(int reseiverId) {
-        this.reseiverId = reseiverId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Date getSendDate() {
-        return sendDate;
-    }
-
-    public void setSendDate(Date sendDate) {
-        this.sendDate = sendDate;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     @Override
     public boolean equals(Object o) {

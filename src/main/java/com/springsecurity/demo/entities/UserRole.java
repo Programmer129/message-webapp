@@ -1,6 +1,7 @@
 package com.springsecurity.demo.entities;
 
-import javax.persistence.CascadeType;
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "user_role")
 public class UserRole {
@@ -26,36 +28,6 @@ public class UserRole {
     private Set<User> users = new HashSet<>();
 
     public UserRole() {}
-
-    public UserRole(Integer roleId, String roleName, Set<User> users) {
-        this.roleId = roleId;
-        this.roleName = roleName;
-        this.users = users;
-    }
-
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
 
     @Override
     public boolean equals(Object o) {
