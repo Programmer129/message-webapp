@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -42,5 +43,10 @@ public class FavouriteFoodsController {
     @GetMapping(path = "/get-foods")
     public List<FoodDTO> getFoods() {
         return favouriteFoodsService.getFoods();
+    }
+
+    @GetMapping(path = "/search-foods")
+    public List<FoodDTO> searchFoods(@RequestParam(value = "name") String name) {
+        return favouriteFoodsService.searchFoods(name);
     }
 }

@@ -127,6 +127,13 @@ public class FavouriteFoodsService {
                 .collect(Collectors.toList());
     }
 
+    public List<FoodDTO> searchFoods(String name) {
+        if(Objects.isNull(session.getAttribute("id"))) {
+            throw new UnauthorisedException();
+        }
+        return foodsRepository.findByNameStartingWith(name).stream().map(this::mapToFoodDTO).collect(Collectors.toList());
+    }
+
     private FoodDTO mapToFoodDTO(Foods food) {
         FoodDTO foodDTO = new FoodDTO();
 
