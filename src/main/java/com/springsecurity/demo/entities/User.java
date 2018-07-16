@@ -2,6 +2,7 @@ package com.springsecurity.demo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +22,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@EqualsAndHashCode
 @Table(name = "user")
 public class User {
 
@@ -69,27 +71,4 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<FavouriteFoods> favouriteFoods = new HashSet<>();
-
-    public User(){}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(userId, user.userId) &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName) &&
-                Objects.equals(birthDate, user.birthDate) &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(imgId, user.imgId) &&
-                Objects.equals(isActive, user.isActive) &&
-                Objects.equals(isUnreadMsg, user.isUnreadMsg) &&
-                Objects.equals(role, user.role) &&
-                Objects.equals(userCard, user.userCard) &&
-                Objects.equals(messages, user.messages) &&
-                Objects.equals(favouriteFoods, user.favouriteFoods);
-    }
 }

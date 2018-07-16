@@ -1,51 +1,20 @@
 package com.springsecurity.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class UserDTO {
 
     @JsonProperty("id")
     private int id;
+
     @JsonProperty("userName")
     private String userName;
+
     @JsonProperty("isUnreadMsg")
     private int isUnreadMsg;
 
     @JsonProperty("balance")
     private Double balance;
-
-    public UserDTO() {
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getIsUnreadMsg() {
-        return isUnreadMsg;
-    }
-
-    public void setIsUnreadMsg(int isUnreadMsg) {
-        this.isUnreadMsg = isUnreadMsg;
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
 }

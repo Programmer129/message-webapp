@@ -24,6 +24,7 @@ public class RegisterController {
 
     @PostMapping(path = "/register")
     public UserRegisterDTO register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
+        //TODO add password hashing fix json ignore
         return registerService.saveUser(userRegisterDTO);
     }
 

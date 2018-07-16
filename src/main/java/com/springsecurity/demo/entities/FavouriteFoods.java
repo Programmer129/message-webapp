@@ -1,6 +1,7 @@
 package com.springsecurity.demo.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.util.Objects;
 
 @Data
 @Entity
+@EqualsAndHashCode
 @Table(name = "favourite_foods", schema = "demo")
 public class FavouriteFoods {
 
@@ -26,20 +28,9 @@ public class FavouriteFoods {
 
     @ManyToOne
     @JoinColumn(name = "foods_id")
-    private Foods foods;
+    private Food food;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    public FavouriteFoods() {}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FavouriteFoods that = (FavouriteFoods) o;
-        return Objects.equals(foods, that.foods) &&
-                Objects.equals(user, that.user);
-    }
 }

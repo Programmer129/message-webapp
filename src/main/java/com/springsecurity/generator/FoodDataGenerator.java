@@ -1,6 +1,6 @@
 package com.springsecurity.generator;
 
-import com.springsecurity.demo.entities.Foods;
+import com.springsecurity.demo.entities.Food;
 import com.springsecurity.parser.WikipediaParser;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ public class FoodDataGenerator {
             List<String> cut = data.subList(151, data.size());
 
             for (String datum : cut) {
-                Foods food = new Foods();
+                Food food = new Food();
                 food.setCategory("sweets");
                 food.setIsImported(1);
                 food.setIsStock(1);

@@ -1,6 +1,7 @@
 package com.springsecurity.demo.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,13 +14,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Data
 @Entity
+@EqualsAndHashCode
 @Table(name = "foods", schema = "demo")
-public class Foods {
+public class Food {
 
     @Id
     @Column(name = "id")
@@ -44,22 +45,6 @@ public class Foods {
     @Column(name = "max_stock", nullable = false)
     private Integer maxStock;
 
-    @OneToMany(mappedBy = "foods", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<FavouriteFoods> favouriteFoods = new HashSet<>();
-
-    public Foods() {}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Foods foods = (Foods) o;
-        return Objects.equals(id, foods.id) &&
-                Objects.equals(name, foods.name) &&
-                Objects.equals(category, foods.category) &&
-                Objects.equals(price, foods.price) &&
-                Objects.equals(isStock, foods.isStock) &&
-                Objects.equals(isImported, foods.isImported) &&
-                Objects.equals(maxStock, foods.maxStock);
-    }
 }

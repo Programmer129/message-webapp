@@ -7,8 +7,6 @@ import com.springsecurity.demo.dto.UserLoginDTO;
 import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.UserRepository;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.Resource;
@@ -63,8 +61,6 @@ public class LoginService {
         Resource resource = null;
         try {
             bucket.downloadToStream("profile" + session.getAttribute("id")+".png", new FileOutputStream(file));
-            FileItem fileItem = new DiskFileItem("profile.png","multipart/*", false, "profile.png",(int)file.length(), file);
-            fileItem.getOutputStream();
             resource = new UrlResource(file.toURI());
         } catch (IOException e) {
             e.printStackTrace();

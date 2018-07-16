@@ -1,9 +1,11 @@
 package com.springsecurity.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
+@Data
 public class FavouriteDTO {
 
     @JsonProperty("name")
@@ -14,28 +16,4 @@ public class FavouriteDTO {
 
     @JsonProperty("totalPrice")
     private BigDecimal totalPrice;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
 }

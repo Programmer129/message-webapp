@@ -4,7 +4,7 @@ import com.springsecurity.demo.dto.FavouriteDTO;
 import com.springsecurity.demo.dto.FavouriteFoodDTO;
 import com.springsecurity.demo.dto.FoodDTO;
 import com.springsecurity.demo.entities.FavouriteFoods;
-import com.springsecurity.demo.entities.Foods;
+import com.springsecurity.demo.entities.Food;
 import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.exceptions.NotEnoughMoneyException;
 import com.springsecurity.demo.exceptions.UnauthorisedException;
@@ -50,10 +50,10 @@ public class FavouriteFoodsService {
         FavouriteFoods favouriteFoods = new FavouriteFoods();
 
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
-        Foods food = foodsRepository.findById(foodDTO.getFoodId()).get();
+        Food food = foodsRepository.findById(foodDTO.getFoodId()).get();
 
         favouriteFoods.setAmount(foodDTO.getAmount());
-        favouriteFoods.setFoods(food);
+        favouriteFoods.setFood(food);
         favouriteFoods.setUser(user);
 
         Set<FavouriteFoods> foods = user.getFavouriteFoods();
@@ -61,7 +61,7 @@ public class FavouriteFoodsService {
         boolean was = false;
         int amount = 0;
         for (FavouriteFoods food1 : foods) {
-            if(food1.getFoods().getId().equals(foodDTO.getFoodId())){
+            if(food1.getFood().getId().equals(foodDTO.getFoodId())){
                 was=true;
                 amount = food1.getAmount();
                 break;
@@ -88,10 +88,10 @@ public class FavouriteFoodsService {
             throw new UnauthorisedException();
         }
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
-        Foods food = foodsRepository.findByName(foodDTO.getName());
+        Food food = foodsRepository.findByName(foodDTO.getName());
 
         List<FavouriteFoods> collect = user.getFavouriteFoods().stream()
-                .filter(a -> a.getFoods().getName().equals(foodDTO.getName()))
+                .filter(a -> a.getFood().getName().equals(foodDTO.getName()))
                 .collect(Collectors.toList());
 
         if(user.getUserCard().getBalance().doubleValue() - foodDTO.getTotalPrice().doubleValue() < 0) {
@@ -123,7 +123,7 @@ public class FavouriteFoodsService {
         User user = userRepository.findByUserName(session.getAttribute("id").toString());
         return user
                 .getFavouriteFoods().stream()
-                .map(item -> mapToFavouriteDTO(item.getFoods(), item.getAmount()))
+                .map(item -> mapToFavouriteDTO(item.getFood(), item.getAmount()))
                 .collect(Collectors.toList());
     }
 
@@ -134,7 +134,7 @@ public class FavouriteFoodsService {
         return foodsRepository.findByNameStartingWith(name).stream().map(this::mapToFoodDTO).collect(Collectors.toList());
     }
 
-    private FoodDTO mapToFoodDTO(Foods food) {
+    private FoodDTO mapToFoodDTO(Food food) {
         FoodDTO foodDTO = new FoodDTO();
 
         foodDTO.setId(food.getId());
@@ -148,7 +148,7 @@ public class FavouriteFoodsService {
         return foodDTO;
     }
 
-    private FavouriteDTO mapToFavouriteDTO(Foods food, Integer amount) {
+    private FavouriteDTO mapToFavouriteDTO(Food food, Integer amount) {
         FavouriteDTO favouriteDTO = new FavouriteDTO();
 
         favouriteDTO.setName(food.getName());

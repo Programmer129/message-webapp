@@ -44,7 +44,7 @@ create table user_card(
   balance float
 );
 
-create table foods(
+create table food(
   id int primary key auto_increment,
   name nvarchar(100) not null,
   category nvarchar(100),
@@ -59,11 +59,11 @@ create table favourite_foods(
   foods_id int,
   user_id int,
   amount int,
-  foreign key (foods_id) references foods(id) on delete cascade on update cascade,
+  foreign key (foods_id) references food(id) on delete cascade on update cascade,
   foreign key (user_id) references user(user_id) on delete cascade on update cascade
 );
 
-insert into foods (name, category, price, is_stock, is_imported, max_stock) VALUES
+insert into food (name, category, price, is_stock, is_imported, max_stock) VALUES
   ('apple','fruit', 1.25,1,0,300),
   ('coconut','fruit', 3.2,1,1,175),
   ('watermelon','fruit', 0.25,1,0,300),

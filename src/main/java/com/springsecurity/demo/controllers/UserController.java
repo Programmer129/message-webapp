@@ -3,12 +3,15 @@ package com.springsecurity.demo.controllers;
 import com.springsecurity.demo.dto.UserRegisterDTO;
 import com.springsecurity.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -19,6 +22,11 @@ public class UserController {
     @Autowired
     public UserController(UserService service) {
         this.service = service;
+    }
+
+    @GetMapping(path = "/get-images", headers = "content-type=multipart/*")
+    public List<Resource> getUserImages() {
+        return service.getUserImages();
     }
 
     @GetMapping(path = "/get-users")

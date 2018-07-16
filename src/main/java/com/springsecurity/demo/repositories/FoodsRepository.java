@@ -1,16 +1,15 @@
 package com.springsecurity.demo.repositories;
 
-import com.springsecurity.demo.entities.Foods;
-import org.springframework.data.jpa.repository.Query;
+import com.springsecurity.demo.entities.Food;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface FoodsRepository extends CrudRepository<Foods, Integer> {
+public interface FoodsRepository extends CrudRepository<Food, Integer> {
 
-    List<Foods> findAll();
+    List<Food> findAll();
 
-    Foods findByName(String name);
+    Food findByName(String name);
 
-    List<Foods> findByNameStartingWith(String name);
+    List<Food> findByNameStartingWith(String name);
 }
