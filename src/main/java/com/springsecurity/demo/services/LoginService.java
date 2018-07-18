@@ -5,16 +5,15 @@ import com.springsecurity.demo.configurations.MongoTemplateConfig;
 import com.springsecurity.demo.dto.UserDTO;
 import com.springsecurity.demo.dto.UserLoginDTO;
 import com.springsecurity.demo.entities.User;
-import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,12 +28,10 @@ public class LoginService {
     private final UserRepository userRepository;
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MongoTemplateConfig.class);
     private GridFSBucket bucket = (GridFSBucket) context.getBean("getFSBucket");
-    private final HttpSession session;
 
     @Autowired
-    public LoginService(UserRepository userRepository, HttpSession session) {
+    public LoginService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.session = session;
     }
 
     @Transactional
@@ -43,8 +40,6 @@ public class LoginService {
         if(Objects.isNull(result) || !result.getPassword().equals(loginDTO.getPassword())) {
             return new UserLoginDTO();
         }
-        this.session.setAttribute("id", loginDTO.getUserName());
-        this.session.setMaxInactiveInterval(200);
         result.setIsActive(1);
         UserLoginDTO userDTO = new UserLoginDTO();
         userDTO.setUserName(result.getUserName());
@@ -54,13 +49,10 @@ public class LoginService {
 
     @Transactional
     public Resource userImg() {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
-        File file = new File("/home/levani/IdeaProjects/demo/src/main/resources/profile" + session.getAttribute("id")+".png");
+        File file = new File("/home/levani/IdeaProjects/demo/src/main/resources/profile" + getCurrentUserName()+".png");
         Resource resource = null;
         try {
-            bucket.downloadToStream("profile" + session.getAttribute("id")+".png", new FileOutputStream(file));
+            bucket.downloadToStream("profile" + getCurrentUserName()+".png", new FileOutputStream(file));
             resource = new UrlResource(file.toURI());
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,11 +61,8 @@ public class LoginService {
     }
 
     public UserDTO getUser() {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
         UserDTO dto = new UserDTO();
-        User user = userRepository.findByUserName(session.getAttribute("id").toString());
+        User user = userRepository.findByUserName(getCurrentUserName());
         dto.setUserName(user.getUserName());
         dto.setId(user.getUserId());
         dto.setIsUnreadMsg(user.getIsUnreadMsg());
@@ -83,16 +72,16 @@ public class LoginService {
     }
 
     public boolean isAuthenticated() {
-        return Objects.nonNull(this.session.getAttribute("id"));
+        return Objects.nonNull(getCurrentUserName());
     }
 
     @Transactional
     public void logOut() {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
-        User result = this.userRepository.findByUserName(session.getAttribute("id").toString());
+        User result = this.userRepository.findByUserName(getCurrentUserName());
         result.setIsActive(0);
-        session.invalidate();
+    }
+
+    private String getCurrentUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

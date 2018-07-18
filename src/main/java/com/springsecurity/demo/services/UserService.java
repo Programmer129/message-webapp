@@ -5,13 +5,13 @@ import com.springsecurity.demo.configurations.MongoTemplateConfig;
 import com.springsecurity.demo.dto.UserCardDTO;
 import com.springsecurity.demo.dto.UserRegisterDTO;
 import com.springsecurity.demo.entities.User;
-import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,32 +33,29 @@ public class UserService {
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MongoTemplateConfig.class);
     private GridFSBucket bucket = (GridFSBucket) context.getBean("getFSBucket");
     private final UserRepository repository;
-    private final HttpSession session;
 
     @Autowired
-    public UserService(HttpSession session, UserRepository repository) {
-        this.session = session;
+    public UserService(UserRepository repository) {
         this.repository = repository;
     }
 
     @Transactional
     public Iterable<UserRegisterDTO> getUsers() {
-        if (Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
-        User user = repository.findByUserName(session.getAttribute("id").toString());
+        System.out.println(getCurrentUserName());
+        User user = repository.findByUserName(getCurrentUserName());
         List<User> list = repository.findByUserIdNotLike(user.getUserId());
         return list.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Transactional
     public UserRegisterDTO getUser() {
-        if (Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
-        User user = repository.findByUserName(session.getAttribute("id").toString());
+        User user = repository.findByUserName(getCurrentUserName());
 
         return mapToDTO(user);
+    }
+
+    private String getCurrentUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     private UserRegisterDTO mapToDTO(User user) {
@@ -86,20 +82,14 @@ public class UserService {
 
     @Transactional
     public HttpStatus updateBalance(Integer balance) {
-        if (Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
-        User user = repository.findByUserName(session.getAttribute("id").toString());
+        User user = repository.findByUserName(getCurrentUserName());
         user.getUserCard().setBalance(BigDecimal.valueOf(balance));
 
         return HttpStatus.OK;
     }
 
     public List<Resource> getUserImages() {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
-        User user = repository.findByUserName(session.getAttribute("id").toString());
+        User user = repository.findByUserName(getCurrentUserName());
         List<User> list = repository.findByUserIdNotLike(user.getUserId());
         List<Resource> resources = new ArrayList<>();
         for (User user1 : list) {

@@ -12,6 +12,8 @@ import com.springsecurity.demo.repositories.FavouriteFoodsRepository;
 import com.springsecurity.demo.repositories.FoodsRepository;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,15 +30,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class FavouriteFoodsService {
 
-    private final HttpSession session;
     private final FavouriteFoodsRepository favouriteFoodsRepository;
     private final UserRepository userRepository;
     private final FoodsRepository foodsRepository;
 
     @Autowired
-    public FavouriteFoodsService(HttpSession session, FavouriteFoodsRepository favouriteFoodsRepository,
+    public FavouriteFoodsService(FavouriteFoodsRepository favouriteFoodsRepository,
                                  UserRepository userRepository, FoodsRepository foodsRepository) {
-        this.session = session;
         this.favouriteFoodsRepository = favouriteFoodsRepository;
         this.userRepository = userRepository;
         this.foodsRepository = foodsRepository;
@@ -44,12 +44,10 @@ public class FavouriteFoodsService {
 
     @Transactional
     public FavouriteFoodDTO addToFavourite(FavouriteFoodDTO foodDTO) {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
         FavouriteFoods favouriteFoods = new FavouriteFoods();
 
-        User user = userRepository.findByUserName(session.getAttribute("id").toString());
+
+        User user = userRepository.findByUserName(getCurrentUserName());
         Food food = foodsRepository.findById(foodDTO.getFoodId()).get();
 
         favouriteFoods.setAmount(foodDTO.getAmount());
@@ -84,10 +82,7 @@ public class FavouriteFoodsService {
 
     @Transactional
     public FavouriteDTO deleteFromFavourite(FavouriteDTO foodDTO) {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
-        User user = userRepository.findByUserName(session.getAttribute("id").toString());
+        User user = userRepository.findByUserName(getCurrentUserName());
         Food food = foodsRepository.findByName(foodDTO.getName());
 
         List<FavouriteFoods> collect = user.getFavouriteFoods().stream()
@@ -109,18 +104,12 @@ public class FavouriteFoodsService {
 
     @Transactional
     public List<FoodDTO> getFoods() {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
         return foodsRepository.findAll().stream().map(this::mapToFoodDTO).collect(Collectors.toList());
     }
 
     @Transactional
     public List<FavouriteDTO> getFavourite() {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
-        User user = userRepository.findByUserName(session.getAttribute("id").toString());
+        User user = userRepository.findByUserName(getCurrentUserName());
         return user
                 .getFavouriteFoods().stream()
                 .map(item -> mapToFavouriteDTO(item.getFood(), item.getAmount()))
@@ -128,10 +117,11 @@ public class FavouriteFoodsService {
     }
 
     public List<FoodDTO> searchFoods(String name) {
-        if(Objects.isNull(session.getAttribute("id"))) {
-            throw new UnauthorisedException();
-        }
         return foodsRepository.findByNameStartingWith(name).stream().map(this::mapToFoodDTO).collect(Collectors.toList());
+    }
+
+    private String getCurrentUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     private FoodDTO mapToFoodDTO(Food food) {
