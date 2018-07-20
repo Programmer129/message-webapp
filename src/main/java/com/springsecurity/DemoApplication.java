@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.io.IOException;
 
 @EnableScheduling
@@ -37,6 +38,7 @@ public class DemoApplication extends SpringBootServletInitializer {
         dataGenerator.persistData(false);
     }
 
+    @Transactional
     @Scheduled(cron = "0 0/1 * * * *")
     public void fileGarbageCollector() throws IOException {
         collector.collectFile();

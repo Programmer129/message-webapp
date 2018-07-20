@@ -24,20 +24,14 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @PostMapping(path = "/auth")
-    public UserLoginDTO getUserByName(@RequestBody UserLoginDTO user) {
-        return loginService.authenticate(user);
+    @GetMapping(path = "/auth")
+    public UserLoginDTO getUserByName() {
+        return loginService.authenticate();
     }
 
     @GetMapping(path = "/is-auth")
     public boolean isAuthenticated() {
         return loginService.isAuthenticated();
-    }
-
-    @GetMapping(path = "/log-out")
-    public ResponseEntity<HttpStatus> logOut() {
-        loginService.logOut();
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(path = "/get-image", headers = "content-type=multipart/*")

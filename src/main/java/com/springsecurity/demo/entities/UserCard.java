@@ -22,7 +22,6 @@ import java.util.Objects;
 
 @Data
 @Entity
-@EqualsAndHashCode
 @Table(name = "user_card", schema = "demo")
 public class UserCard {
 

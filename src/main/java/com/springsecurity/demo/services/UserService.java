@@ -41,7 +41,6 @@ public class UserService {
 
     @Transactional
     public Iterable<UserRegisterDTO> getUsers() {
-        System.out.println(getCurrentUserName());
         User user = repository.findByUserName(getCurrentUserName());
         List<User> list = repository.findByUserIdNotLike(user.getUserId());
         return list.stream().map(this::mapToDTO).collect(Collectors.toList());

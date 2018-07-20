@@ -14,7 +14,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@EqualsAndHashCode
 @Table(name = "user_role")
 public class UserRole {
 

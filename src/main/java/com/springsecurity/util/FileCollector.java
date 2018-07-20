@@ -5,6 +5,7 @@ import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,6 +23,7 @@ public class FileCollector {
         this.repository = repository;
     }
 
+    @Transactional
     public void collectFile() throws IOException {
         Iterable<User> users = repository.findAll();
 

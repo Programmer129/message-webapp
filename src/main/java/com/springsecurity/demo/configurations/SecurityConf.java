@@ -17,17 +17,25 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsConfig userDetailsConfig;
 
+    @Autowired
+    private LogoutSuccessHandlerConf logoutSuccessHandlerConf;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/**").hasAnyAuthority("USER", "ADMIN")
+                    .antMatchers("/api/is-auth", "/api/register").permitAll()
+                    .antMatchers("/**").hasAnyAuthority("USER", "ADMIN")
                 .and()
-                .authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                .and().logout().logoutUrl("/api/log-out").permitAll()
+                    .authorizeRequests()
+                    .anyRequest()
+                    .authenticated()
                 .and()
-                .httpBasic();
+                    .logout()
+                    .logoutUrl("/log-out")
+                    .invalidateHttpSession(true)
+                    .logoutSuccessHandler(logoutSuccessHandlerConf)
+                .and()
+                    .httpBasic();
     }
 
     @Override

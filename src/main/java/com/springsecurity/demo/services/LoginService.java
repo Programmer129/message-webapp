@@ -35,11 +35,8 @@ public class LoginService {
     }
 
     @Transactional
-    public UserLoginDTO authenticate(UserLoginDTO loginDTO) {
-        User result = this.userRepository.findByUserName(loginDTO.getUserName());
-        if(Objects.isNull(result) || !result.getPassword().equals(loginDTO.getPassword())) {
-            return new UserLoginDTO();
-        }
+    public UserLoginDTO authenticate() {
+        User result = this.userRepository.findByUserName(getCurrentUserName());
         result.setIsActive(1);
         UserLoginDTO userDTO = new UserLoginDTO();
         userDTO.setUserName(result.getUserName());
@@ -72,13 +69,7 @@ public class LoginService {
     }
 
     public boolean isAuthenticated() {
-        return Objects.nonNull(getCurrentUserName());
-    }
-
-    @Transactional
-    public void logOut() {
-        User result = this.userRepository.findByUserName(getCurrentUserName());
-        result.setIsActive(0);
+        return !Objects.equals(getCurrentUserName(), "anonymousUser");
     }
 
     private String getCurrentUserName() {

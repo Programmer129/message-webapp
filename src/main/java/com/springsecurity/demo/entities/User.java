@@ -22,7 +22,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@EqualsAndHashCode
 @Table(name = "user")
 public class User {
 
