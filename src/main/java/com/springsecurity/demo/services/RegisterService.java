@@ -14,6 +14,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +34,7 @@ public class RegisterService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final UserCardRepository cardRepository;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MongoTemplateConfig.class);
     private GridFsOperations gridFsOperations = (GridFsOperations) context.getBean("gridFsTemplate");
 
@@ -52,7 +55,7 @@ public class RegisterService {
         user.setFirstName(userRegisterDTO.getFirstName());
         user.setLastName(userRegisterDTO.getLastName());
         user.setUserName(userRegisterDTO.getUserName());
-        user.setPassword(userRegisterDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
         user.setBirthDate(userRegisterDTO.getBirthDate());
         user.setEmail(userRegisterDTO.getEmail());
         user.setIsActive(0);

@@ -3,7 +3,7 @@ package com.springsecurity.demo.services;
 import com.springsecurity.demo.dto.FavouriteDTO;
 import com.springsecurity.demo.dto.FavouriteFoodDTO;
 import com.springsecurity.demo.dto.FoodDTO;
-import com.springsecurity.demo.entities.FavouriteFoods;
+import com.springsecurity.demo.entities.FavouriteFood;
 import com.springsecurity.demo.entities.Food;
 import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.exceptions.NotEnoughMoneyException;
@@ -40,20 +40,20 @@ public class FavouriteFoodsService {
 
     @Transactional
     public FavouriteFoodDTO addToFavourite(FavouriteFoodDTO foodDTO) {
-        FavouriteFoods favouriteFoods = new FavouriteFoods();
+        FavouriteFood favouriteFood = new FavouriteFood();
 
         User user = userRepository.findByUserName(getCurrentUserName());
         Food food = foodsRepository.findById(foodDTO.getFoodId()).get();
 
-        favouriteFoods.setAmount(foodDTO.getAmount());
-        favouriteFoods.setFood(food);
-        favouriteFoods.setUser(user);
+        favouriteFood.setAmount(foodDTO.getAmount());
+        favouriteFood.setFood(food);
+        favouriteFood.setUser(user);
 
-        Set<FavouriteFoods> foods = user.getFavouriteFoods();
+        Set<FavouriteFood> foods = user.getFavouriteFoods();
 
         boolean was = false;
         int amount = 0;
-        for (FavouriteFoods food1 : foods) {
+        for (FavouriteFood food1 : foods) {
             if(food1.getFood().getId().equals(foodDTO.getFoodId())){
                 was=true;
                 amount = food1.getAmount();
@@ -65,12 +65,12 @@ public class FavouriteFoodsService {
             favouriteFoodsRepository.updateAmount(foodDTO.getAmount() + amount, user);
         }
         else {
-            favouriteFoods = favouriteFoodsRepository.save(favouriteFoods);
+            favouriteFood = favouriteFoodsRepository.save(favouriteFood);
         }
 
-        foodDTO.setAmount(favouriteFoods.getAmount() + amount);
+        foodDTO.setAmount(favouriteFood.getAmount() + amount);
         foodDTO.setUserId(user.getUserId());
-        foodDTO.setId(favouriteFoods.getId());
+        foodDTO.setId(favouriteFood.getId());
 
         return foodDTO;
     }
@@ -80,7 +80,7 @@ public class FavouriteFoodsService {
         User user = userRepository.findByUserName(getCurrentUserName());
         Food food = foodsRepository.findByName(foodDTO.getName());
 
-        List<FavouriteFoods> collect = user.getFavouriteFoods().stream()
+        List<FavouriteFood> collect = user.getFavouriteFoods().stream()
                 .filter(a -> a.getFood().getName().equals(foodDTO.getName()))
                 .collect(Collectors.toList());
 

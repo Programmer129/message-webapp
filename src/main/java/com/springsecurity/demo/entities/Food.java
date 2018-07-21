@@ -41,7 +41,7 @@ public class Food {
     private Integer maxStock;
 
     @OneToMany(mappedBy = "food", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private Set<FavouriteFoods> favouriteFoods = new HashSet<>();
+    private Set<FavouriteFood> favouriteFoods = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -99,11 +99,11 @@ public class Food {
         this.maxStock = maxStock;
     }
 
-    public Set<FavouriteFoods> getFavouriteFoods() {
+    public Set<FavouriteFood> getFavouriteFoods() {
         return favouriteFoods;
     }
 
-    public void setFavouriteFoods(Set<FavouriteFoods> favouriteFoods) {
+    public void setFavouriteFoods(Set<FavouriteFood> favouriteFoods) {
         this.favouriteFoods = favouriteFoods;
     }
 }
