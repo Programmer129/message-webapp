@@ -1,8 +1,5 @@
 package com.springsecurity.demo.entities;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +13,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
-@EqualsAndHashCode
 @Table(name = "foods", schema = "demo")
 public class Food {
 
@@ -45,6 +40,70 @@ public class Food {
     @Column(name = "max_stock", nullable = false)
     private Integer maxStock;
 
-    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "food", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Set<FavouriteFoods> favouriteFoods = new HashSet<>();
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Integer getIsStock() {
+        return isStock;
+    }
+
+    public void setIsStock(Integer isStock) {
+        this.isStock = isStock;
+    }
+
+    public Integer getIsImported() {
+        return isImported;
+    }
+
+    public void setIsImported(Integer isImported) {
+        this.isImported = isImported;
+    }
+
+    public Integer getMaxStock() {
+        return maxStock;
+    }
+
+    public void setMaxStock(Integer maxStock) {
+        this.maxStock = maxStock;
+    }
+
+    public Set<FavouriteFoods> getFavouriteFoods() {
+        return favouriteFoods;
+    }
+
+    public void setFavouriteFoods(Set<FavouriteFoods> favouriteFoods) {
+        this.favouriteFoods = favouriteFoods;
+    }
 }

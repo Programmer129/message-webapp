@@ -1,8 +1,5 @@
 package com.springsecurity.demo.entities;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +9,6 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
 @Table(name = "user_role")
 public class UserRole {
@@ -26,4 +22,28 @@ public class UserRole {
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 }

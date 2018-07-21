@@ -7,21 +7,17 @@ import com.springsecurity.demo.entities.FavouriteFoods;
 import com.springsecurity.demo.entities.Food;
 import com.springsecurity.demo.entities.User;
 import com.springsecurity.demo.exceptions.NotEnoughMoneyException;
-import com.springsecurity.demo.exceptions.UnauthorisedException;
 import com.springsecurity.demo.repositories.FavouriteFoodsRepository;
 import com.springsecurity.demo.repositories.FoodsRepository;
 import com.springsecurity.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,7 +41,6 @@ public class FavouriteFoodsService {
     @Transactional
     public FavouriteFoodDTO addToFavourite(FavouriteFoodDTO foodDTO) {
         FavouriteFoods favouriteFoods = new FavouriteFoods();
-
 
         User user = userRepository.findByUserName(getCurrentUserName());
         Food food = foodsRepository.findById(foodDTO.getFoodId()).get();
