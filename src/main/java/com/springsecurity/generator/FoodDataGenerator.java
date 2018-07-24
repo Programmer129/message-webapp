@@ -1,6 +1,6 @@
 package com.springsecurity.generator;
 
-import com.springsecurity.demo.entities.Food;
+import com.springsecurity.core.entities.Food;
 import com.springsecurity.parser.WikipediaParser;
 import org.springframework.stereotype.Component;
 

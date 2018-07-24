@@ -1,7 +1,7 @@
 package com.springsecurity.util;
 
-import com.springsecurity.demo.entities.User;
-import com.springsecurity.demo.repositories.UserRepository;
+import com.springsecurity.core.entities.User;
+import com.springsecurity.core.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 @Component
 public class FileCollector {
 
-    private static final String URL = "/home/levani/IdeaProjects/demo/src/main/resources/profile";
+    private static final String URL = "/home/levani/IdeaProjects/core/src/main/resources/profile";
 
     private final UserRepository repository;
 
