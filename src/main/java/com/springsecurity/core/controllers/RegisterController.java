@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/token")
 public class RegisterController {
 
     private final RegisterService registerService;

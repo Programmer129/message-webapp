@@ -1,13 +1,9 @@
 package com.springsecurity.core.configurations;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -16,24 +12,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
-@Component
 public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     @Autowired
     private JWTTokenProvider tokenProvider;
 
-    @Autowired
-    private UserDetailsConfig userDetailsConfig;
-
     public JWTAuthenticationFilter() {
-        super("/**");
+        super("/api/**");
     }
 
     private String getTokenFrom(HttpServletRequest request) {
-        String header = request.getHeader("X-Auth-Token");
+        String header = request.getHeader("Authorisation");
 
-        if(Objects.nonNull(header) && header.startsWith("Bearer")) {
-            return header;
+        if(Objects.nonNull(header) && header.startsWith("Token")) {
+            return header.substring(6, header.length());
         }
 
         return null;
@@ -45,17 +37,9 @@ public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFil
         String token = getTokenFrom(httpServletRequest);
 
         if (Objects.nonNull(token) && tokenProvider.validate(token)) {
-            String userName = tokenProvider.getUserNameFromToken(token);
-
-            UserDetails userDetails = userDetailsConfig.loadUserByUsername(userName);
-
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                    = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-            usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-
-            return getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
+            return getAuthenticationManager().authenticate(new JWTAuthenticationToken(token));
         }
+
         return null;
     }
 

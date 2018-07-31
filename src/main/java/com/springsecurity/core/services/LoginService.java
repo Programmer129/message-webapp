@@ -6,6 +6,7 @@ import com.springsecurity.core.configurations.MongoTemplateConfig;
 import com.springsecurity.core.dto.UserDTO;
 import com.springsecurity.core.dto.UserLoginDTO;
 import com.springsecurity.core.entities.User;
+import com.springsecurity.core.exceptions.UserNotFoundException;
 import com.springsecurity.core.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Component
@@ -39,12 +41,14 @@ public class LoginService {
 
     @Transactional
     public UserLoginDTO authenticate(UserLoginDTO loginDTO) {
-        User result = this.userRepository.findByUserName(getCurrentUserName());
+        User result = Optional
+                .ofNullable(this.userRepository.findByUserName(loginDTO.getUserName()))
+                .orElseThrow(UserNotFoundException::new);
         result.setIsActive(1);
         UserLoginDTO userDTO = new UserLoginDTO();
         userDTO.setUserName(result.getUserName());
         userDTO.setPassword(result.getPassword());
-        userDTO.setToken(tokenProvider.generateToken(SecurityContextHolder.getContext().getAuthentication()));
+        userDTO.setToken(tokenProvider.generateToken(loginDTO));
         return userDTO;
     }
 

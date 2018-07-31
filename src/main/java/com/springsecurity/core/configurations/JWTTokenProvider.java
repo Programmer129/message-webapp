@@ -1,6 +1,8 @@
 package com.springsecurity.core.configurations;
 
+import com.springsecurity.core.dto.UserLoginDTO;
 import com.sun.security.auth.UserPrincipal;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,15 +22,14 @@ public class JWTTokenProvider {
 
     private Long jwtExpired = 1000000L;
 
-    public String generateToken(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
+    public String generateToken(UserLoginDTO loginDTO) {
 
-        Date expireDate = new Date(new Date().getTime() + jwtExpired);
+        Claims claims = Jwts.claims()
+                .setSubject(loginDTO.getUserName());
+        claims.put("password", String.valueOf(loginDTO.getPassword()));
 
         return Jwts.builder()
-                .setSubject(userPrincipal.getName())
-                .setIssuedAt(new Date())
-                .setExpiration(expireDate)
+                .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
@@ -37,7 +38,7 @@ public class JWTTokenProvider {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
-                .getSignature();
+                .getBody().getSubject();
     }
 
     public Boolean validate(String token) {

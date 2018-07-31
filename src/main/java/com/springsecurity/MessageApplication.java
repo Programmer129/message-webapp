@@ -5,8 +5,6 @@ import com.springsecurity.util.FileCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -16,7 +14,7 @@ import java.io.IOException;
 
 @EnableScheduling
 @SpringBootApplication
-public class DemoApplication extends SpringBootServletInitializer {
+public class MessageApplication {
 
     @Autowired
     private FoodDataGenerator dataGenerator;
@@ -25,12 +23,7 @@ public class DemoApplication extends SpringBootServletInitializer {
     private FileCollector collector;
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-    }
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(DemoApplication.class);
+        SpringApplication.run(MessageApplication.class, args);
     }
 
     @PostConstruct
