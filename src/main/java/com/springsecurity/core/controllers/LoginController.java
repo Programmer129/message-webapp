@@ -6,6 +6,8 @@ import com.springsecurity.core.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +22,9 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @GetMapping(path = "/auth")
-    public UserLoginDTO getUserByName() {
-        return loginService.authenticate();
+    @PostMapping(path = "/auth")
+    public UserLoginDTO getUserByName(@RequestBody UserLoginDTO loginDTO) {
+        return loginService.authenticate(loginDTO);
     }
 
     @GetMapping(path = "/is-auth")

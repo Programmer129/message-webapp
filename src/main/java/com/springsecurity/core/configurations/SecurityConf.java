@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,12 @@ import org.springframework.stereotype.Component;
 public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Autowired
+    private JWTAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
     private UserDetailsConfig userDetailsConfig;
 
     @Autowired
@@ -22,8 +29,17 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                    .antMatchers("/api/is-auth", "/api/register").permitAll()
+
+        http.csrf().disable()
+                    .addFilterBefore(jwtAuthenticationFilter, JWTAuthenticationFilter.class)
+                    .exceptionHandling()
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                    .authorizeRequests()
+                    .antMatchers("/api/is-auth", "/api/register", "/api/auth").permitAll()
                     .antMatchers("/**").hasAnyAuthority("USER", "ADMIN")
                 .and()
                     .authorizeRequests()
@@ -33,9 +49,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                     .logout()
                     .logoutUrl("/log-out")
                     .invalidateHttpSession(true)
-                    .logoutSuccessHandler(logoutSuccessHandlerConf)
-                .and()
-                    .httpBasic();
+                    .logoutSuccessHandler(logoutSuccessHandlerConf);
     }
 
     @Override

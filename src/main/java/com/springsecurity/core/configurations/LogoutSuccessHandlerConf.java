@@ -22,7 +22,9 @@ public class LogoutSuccessHandlerConf extends SimpleUrlLogoutSuccessHandler impl
 
     @Override
     @Transactional
-    public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication)
+    public void onLogoutSuccess(HttpServletRequest httpServletRequest,
+                                HttpServletResponse httpServletResponse,
+                                Authentication authentication)
         throws UserNotAuthenticatedException {
         String name = Optional
                         .ofNullable(authentication)

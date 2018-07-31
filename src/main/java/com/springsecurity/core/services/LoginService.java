@@ -1,6 +1,7 @@
 package com.springsecurity.core.services;
 
 import com.mongodb.client.gridfs.GridFSBucket;
+import com.springsecurity.core.configurations.JWTTokenProvider;
 import com.springsecurity.core.configurations.MongoTemplateConfig;
 import com.springsecurity.core.dto.UserDTO;
 import com.springsecurity.core.dto.UserLoginDTO;
@@ -26,21 +27,24 @@ import java.util.Objects;
 public class LoginService {
 
     private final UserRepository userRepository;
+    private final JWTTokenProvider tokenProvider;
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MongoTemplateConfig.class);
     private GridFSBucket bucket = (GridFSBucket) context.getBean("getFSBucket");
 
     @Autowired
-    public LoginService(UserRepository userRepository) {
+    public LoginService(UserRepository userRepository, JWTTokenProvider tokenProvider) {
         this.userRepository = userRepository;
+        this.tokenProvider = tokenProvider;
     }
 
     @Transactional
-    public UserLoginDTO authenticate() {
+    public UserLoginDTO authenticate(UserLoginDTO loginDTO) {
         User result = this.userRepository.findByUserName(getCurrentUserName());
         result.setIsActive(1);
         UserLoginDTO userDTO = new UserLoginDTO();
         userDTO.setUserName(result.getUserName());
         userDTO.setPassword(result.getPassword());
+        userDTO.setToken(tokenProvider.generateToken(SecurityContextHolder.getContext().getAuthentication()));
         return userDTO;
     }
 

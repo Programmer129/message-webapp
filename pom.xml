@@ -142,9 +142,16 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.6.0</version>
         </dependency>
 
     </dependencies>
@@ -159,6 +166,29 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <repository>avto1997/spring-boot-message-ws</repository>
+                    <tag>1.0</tag>
+                    <buildArgs>
+                        <WAR_FILE>target/demo-0.0.1-SNAPSHOT.war</WAR_FILE>
+                    </buildArgs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -1,6 +1,7 @@
 package com.springsecurity.core.configurations;
 
 import com.springsecurity.core.entities.User;
+import com.springsecurity.core.exceptions.UserNotFoundException;
 import com.springsecurity.core.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,8 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.Optional;
 
 @Configuration
 public class UserDetailsConfig implements UserDetailsService {
@@ -21,7 +24,9 @@ public class UserDetailsConfig implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = repository.findByUserName(s);
+        User user = Optional
+                .ofNullable(repository.findByUserName(s))
+                .orElseThrow(UserNotFoundException::new);
 
         return new org.springframework.security.core.userdetails
                 .User(s, user.getPassword(), AuthorityUtils.createAuthorityList(user.getRole()

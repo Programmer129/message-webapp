@@ -11,4 +11,7 @@ public class UserLoginDTO {
 
     @JsonProperty("password")
     private String password;
+
+    @JsonProperty("token")
+    private String token;
 }
