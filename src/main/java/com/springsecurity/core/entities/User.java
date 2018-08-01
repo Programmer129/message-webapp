@@ -61,9 +61,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserMessage> messages = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<FavouriteFood> favouriteFoods = new HashSet<>();
-
     public Integer getUserId() {
         return userId;
     }
@@ -166,13 +163,5 @@ public class User {
 
     public void setMessages(Set<UserMessage> messages) {
         this.messages = messages;
-    }
-
-    public Set<FavouriteFood> getFavouriteFoods() {
-        return favouriteFoods;
-    }
-
-    public void setFavouriteFoods(Set<FavouriteFood> favouriteFoods) {
-        this.favouriteFoods = favouriteFoods;
     }
 }
