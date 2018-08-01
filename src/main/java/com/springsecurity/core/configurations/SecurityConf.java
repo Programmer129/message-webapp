@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,47 +13,37 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-
 @Component
 @Configuration
 @EnableWebSecurity
 public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    @Autowired
     private LogoutSuccessHandlerConf logoutSuccessHandlerConf;
 
     @Autowired
-    private JWTAuthenticationProvider providerManager;
+    private UserDetailsConfig userDetailsConfig;
+
+    @Autowired
+    private JWTAuthenticationFilter filter;
 
     @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(Collections.singletonList(providerManager));
-    }
-
-    @Bean
-    public JWTAuthenticationFilter getFilter() throws Exception {
-        JWTAuthenticationFilter filter = new JWTAuthenticationFilter();
-        filter.setAuthenticationManager(authenticationManager());
-
-        return filter;
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().disable();
 
         http.csrf().disable()
-                    .addFilterBefore(getFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
                     .antMatchers("/token/is-auth", "/token/register", "/token/auth").permitAll()
-                    .antMatchers("/**").hasAnyAuthority("USER", "ADMIN")
+                    .antMatchers("/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .and()
                     .logout()
                     .logoutUrl("/log-out")
@@ -64,6 +53,6 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(userDetailsConfig).passwordEncoder(new BCryptPasswordEncoder());
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ import java.util.Optional;
 @Transactional
 public class LoginService {
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final JWTTokenProvider tokenProvider;
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MongoTemplateConfig.class);
@@ -49,6 +53,7 @@ public class LoginService {
         userDTO.setUserName(result.getUserName());
         userDTO.setPassword(result.getPassword());
         userDTO.setToken(tokenProvider.generateToken(loginDTO));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
         return userDTO;
     }
 
@@ -77,6 +82,7 @@ public class LoginService {
     }
 
     public boolean isAuthenticated() {
+        System.out.println(getCurrentUserName());
         return !Objects.equals(getCurrentUserName(), "anonymousUser");
     }
 

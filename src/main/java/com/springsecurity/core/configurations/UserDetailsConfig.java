@@ -9,8 +9,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -18,7 +16,6 @@ import java.util.Optional;
 public class UserDetailsConfig implements UserDetailsService {
 
     private final UserRepository repository;
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserDetailsConfig(UserRepository repository) {
@@ -32,7 +29,7 @@ public class UserDetailsConfig implements UserDetailsService {
                 .orElseThrow(UserNotFoundException::new);
 
         return new org.springframework.security.core.userdetails
-                .User(user.getUserName(), user.getPassword(), AuthorityUtils.createAuthorityList(user.getRole()
+                .User(user.getUserName(), user.getPassword(), AuthorityUtils.createAuthorityList("ROLE_" + user.getRole()
                 .getRoleName()));
     }
 }
