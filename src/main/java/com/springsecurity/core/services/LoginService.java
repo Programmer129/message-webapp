@@ -6,6 +6,7 @@ import com.springsecurity.core.configurations.MongoTemplateConfig;
 import com.springsecurity.core.dto.UserDTO;
 import com.springsecurity.core.dto.UserLoginDTO;
 import com.springsecurity.core.entities.User;
+import com.springsecurity.core.exceptions.UnauthorisedException;
 import com.springsecurity.core.exceptions.UserNotFoundException;
 import com.springsecurity.core.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +51,9 @@ public class LoginService {
                 .ofNullable(this.userRepository.findByUserName(loginDTO.getUserName()))
                 .orElseThrow(UserNotFoundException::new);
         result.setIsActive(1);
+        if (!BCrypt.checkpw(loginDTO.getPassword(), result.getPassword())) {
+            throw new UnauthorisedException();
+        }
         UserLoginDTO userDTO = new UserLoginDTO();
         userDTO.setUserName(result.getUserName());
         userDTO.setPassword(result.getPassword());

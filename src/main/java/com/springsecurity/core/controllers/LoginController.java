@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping(path = "/token")
 public class LoginController {
@@ -23,18 +25,14 @@ public class LoginController {
     }
 
     @PostMapping(path = "/auth")
-    public UserLoginDTO getUserByName(@RequestBody UserLoginDTO loginDTO) {
+    public UserLoginDTO getUserByName(@RequestBody UserLoginDTO loginDTO,
+                                      HttpServletResponse response) {
         return loginService.authenticate(loginDTO);
     }
 
     @GetMapping(path = "/is-auth")
     public boolean isAuthenticated() {
         return loginService.isAuthenticated();
-    }
-
-    @GetMapping(path = "/get-image", headers = "content-type=multipart/*")
-    public Resource getUserProfile() {
-        return loginService.userImg();
     }
 
     @GetMapping(path = "/get-name")

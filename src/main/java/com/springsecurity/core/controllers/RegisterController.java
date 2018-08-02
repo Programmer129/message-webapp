@@ -26,9 +26,4 @@ public class RegisterController {
     public UserRegisterDTO register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
         return registerService.saveUser(userRegisterDTO);
     }
-
-    @PostMapping(path = "/upload", headers = "content-type=multipart/*")
-    public UserRegisterDTO uploadFile(@RequestBody MultipartFile multipartFile) {
-        return registerService.uploadFile(multipartFile);
-    }
 }
