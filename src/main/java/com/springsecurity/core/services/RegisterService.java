@@ -6,6 +6,7 @@ import com.springsecurity.core.dto.UserRegisterDTO;
 import com.springsecurity.core.entities.User;
 import com.springsecurity.core.entities.UserCard;
 import com.springsecurity.core.entities.UserRole;
+import com.springsecurity.core.exceptions.UsernameAlreadyExsistsException;
 import com.springsecurity.core.repositories.UserCardRepository;
 import com.springsecurity.core.repositories.UserRepository;
 import com.springsecurity.core.repositories.UserRoleRepository;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Component
@@ -50,6 +53,10 @@ public class RegisterService {
         User user = new User();
 
         UserRole role = userRoleRepository.findById(2).get();
+
+        if(Objects.nonNull(userRepository.findByUserName(userRegisterDTO.getUserName()))) {
+            throw new UsernameAlreadyExsistsException();
+        }
 
         user.setRole(role);
         user.setFirstName(userRegisterDTO.getFirstName());

@@ -66,6 +66,7 @@ public class UserService {
         cardDTO.setDateExpire(user.getUserCard().getDateExpire());
         cardDTO.setBalance(user.getUserCard().getBalance().doubleValue());
 
+        userRegisterDTO.setPassword(user.getPassword());
         userRegisterDTO.setFirstName(user.getFirstName());
         userRegisterDTO.setLastName(user.getLastName());
         userRegisterDTO.setEmail(user.getEmail());

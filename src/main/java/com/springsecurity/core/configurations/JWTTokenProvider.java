@@ -1,14 +1,12 @@
 package com.springsecurity.core.configurations;
 
 import com.springsecurity.core.dto.UserLoginDTO;
-import com.sun.security.auth.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -20,28 +18,28 @@ public class JWTTokenProvider {
 
     private String jwtSecret = "test-password";
 
-    private Long jwtExpired = 1000000L;
-
     public String generateToken(UserLoginDTO loginDTO) {
 
         Claims claims = Jwts.claims()
                 .setSubject(loginDTO.getUserName());
-        claims.put("password", String.valueOf(loginDTO.getPassword()));
+        claims.put("userName", String.valueOf(loginDTO.getUserName()));
 
+        long jwtExpired = 1000000L;
         return Jwts.builder()
                 .setClaims(claims)
+                .setExpiration(new Date(new Date().getTime() + jwtExpired))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
-    public String getUserNameFromToken(String token) {
+    String getUserNameFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody().getSubject();
     }
 
-    public Boolean validate(String token) {
+    Boolean validate(String token) {
         try {
             Jwts.parser()
                     .setSigningKey(jwtSecret)

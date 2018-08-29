@@ -18,8 +18,8 @@ public class FoodDataGenerator {
 
     @PersistenceContext
     private EntityManager entityManager;
-    private static final String URL = "https://en.wikipedia.org/wiki/List_of_desserts";
-    private static final String TAG = "a";
+    private static final String URL = "https://en.wikipedia.org/wiki/List_of_fast_food_restaurant_chains";
+    private static final String TAG = "li";
 
     @Transactional
     public void persistData(Boolean doExecute) {
@@ -32,18 +32,20 @@ public class FoodDataGenerator {
             }
 
             List<String> data = Objects.requireNonNull(parser).parse();
-            List<String> cut = data.subList(151, data.size());
+            List<String> cut = data.subList(57, data.size());
 
             for (String datum : cut) {
-                Food food = new Food();
-                food.setCategory("sweets");
-                food.setIsImported(1);
-                food.setIsStock(1);
-                food.setMaxStock(generateStock());
-                food.setName(datum);
-                food.setPrice(BigDecimal.valueOf(generatePrice()));
+                if(datum.length() <= 100) {
+                    Food food = new Food();
+                    food.setCategory("sweets");
+                    food.setIsImported(1);
+                    food.setIsStock(1);
+                    food.setMaxStock(generateStock());
+                    food.setName(datum);
+                    food.setPrice(BigDecimal.valueOf(generatePrice()));
 
-                entityManager.persist(food);
+                    entityManager.persist(food);
+                }
             }
         }
     }
