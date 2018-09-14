@@ -12,6 +12,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Component
 @Configuration
@@ -35,11 +41,11 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.csrf().disable()
+        http
+                    .csrf().disable()
                     .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                     .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
                     .authorizeRequests()
                     .antMatchers("/token/is-auth", "/token/register", "/token/auth").permitAll()
@@ -48,11 +54,25 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                     .logout()
                     .logoutUrl("/log-out")
                     .invalidateHttpSession(true)
-                    .logoutSuccessHandler(logoutSuccessHandlerConf);
+                    .logoutSuccessHandler(logoutSuccessHandlerConf)
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> httpServletResponse.sendRedirect("/"));
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsConfig).passwordEncoder(new BCryptPasswordEncoder());
+    }
+
+    @Bean
+    protected CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowedHeaders(Collections.singletonList("Access-Control-Allow-Origin"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

@@ -14,7 +14,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -53,13 +55,15 @@ public class LoginService {
         userDTO.setUserName(result.getUserName());
         userDTO.setPassword(result.getPassword());
         userDTO.setToken(tokenProvider.generateToken(loginDTO));
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
+        Authentication authenticate =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
+        SecurityContextHolder.setContext(new SecurityContextImpl(authenticate));
         return userDTO;
     }
 
     @Transactional
     public Resource userImg() {
-        File file = new File("/home/levani/IdeaProjects/core/src/main/resources/profile" + getCurrentUserName()+".png");
+        File file = new File("profile" + getCurrentUserName()+".png");
         Resource resource = null;
         try {
             bucket.downloadToStream("profile" + getCurrentUserName()+".png", new FileOutputStream(file));
@@ -82,8 +86,9 @@ public class LoginService {
     }
 
     public boolean isAuthenticated() {
-        System.out.println(getCurrentUserName());
-        return !Objects.equals(getCurrentUserName(), "anonymousUser");
+        String user = getCurrentUserName();
+        System.out.println(user);
+        return !Objects.equals(user, "anonymousUser");
     }
 
     private String getCurrentUserName() {

@@ -12,7 +12,7 @@ create table user_role(
 create table user(
   user_id int primary key auto_increment,
   user_name nvarchar(30) not null,
-  password nvarchar(30) not null,
+  password nvarchar(100) not null,
   role_id int,
   email nvarchar(30),
   img_id nvarchar(100),
@@ -85,7 +85,7 @@ insert into user_role (role_id, role_name) values
   (2, 'user');
 
 insert into user (user_id, first_name, last_name, user_name, password, birth_date, role_id, email, is_active) VALUES
-  (1, 'avto', 'bolashvili', 'avto123', 'gameri21', '21.12.1997', 2, 'avto@mail.com',0)
+  (1, 'avto', 'bolashvili', 'avto123', 'gameri21', '21.12.1997', 2, 'avto@mail.com',0);
 
 
 insert into user_card(user_id, card_id, card_type, date_added, date_expired, balance) VALUES

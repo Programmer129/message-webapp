@@ -9,12 +9,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 
 @Configuration
-@Component
 public class MongoTemplateConfig extends AbstractMongoConfiguration {
 
     private static final String HOST = "0.0.0.0";
