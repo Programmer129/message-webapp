@@ -10,12 +10,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -43,7 +44,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                     .csrf().disable()
-                    .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(filter, BasicAuthenticationFilter.class)
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
@@ -51,13 +52,14 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                     .antMatchers("/token/is-auth", "/token/register", "/token/auth").permitAll()
                     .antMatchers("/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .and()
-                    .logout()
+                    .logout().clearAuthentication(Boolean.TRUE)
                     .logoutUrl("/log-out")
-                    .invalidateHttpSession(true)
                     .logoutSuccessHandler(logoutSuccessHandlerConf)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
                 .and()
-                .exceptionHandling()
-                .accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> httpServletResponse.sendRedirect("/"));
+                    .exceptionHandling()
+                    .accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED));
     }
 
     @Override

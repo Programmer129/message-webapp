@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "foods", schema = "core")
+@Table(name = "foods", schema = "message_ws")
 public class Food {
 
     @Id

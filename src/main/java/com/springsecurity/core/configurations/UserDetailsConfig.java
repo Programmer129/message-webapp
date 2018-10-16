@@ -29,7 +29,7 @@ public class UserDetailsConfig implements UserDetailsService {
                 .orElseThrow(UserNotFoundException::new);
 
         return new org.springframework.security.core.userdetails
-                .User(user.getUserName(), user.getPassword(), AuthorityUtils.createAuthorityList("ROLE_" + user.getRole()
+                .User(user.getUserName(), user.getPassword(), AuthorityUtils.createAuthorityList(user.getRole()
                 .getRoleName()));
     }
 }

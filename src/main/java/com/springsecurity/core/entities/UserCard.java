@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_card", schema = "core")
+@Table(name = "user_card", schema = "message_ws")
 public class UserCard {
 
     @Id

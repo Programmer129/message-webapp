@@ -57,7 +57,7 @@ public class LoginService {
         userDTO.setToken(tokenProvider.generateToken(loginDTO));
         Authentication authenticate =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
-        SecurityContextHolder.setContext(new SecurityContextImpl(authenticate));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
         return userDTO;
     }
 
