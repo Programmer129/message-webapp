@@ -24,7 +24,7 @@ public class JWTTokenProvider {
                 .setSubject(loginDTO.getUserName());
         claims.put("userName", String.valueOf(loginDTO.getUserName()));
 
-        long jwtExpired = 1000000L;
+        long jwtExpired = 100000000000000000L;
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(new Date(new Date().getTime() + jwtExpired))

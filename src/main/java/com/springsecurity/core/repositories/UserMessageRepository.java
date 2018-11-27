@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface UserMessageRepository extends CrudRepository<UserMessage, Integer> {
 
-    List<UserMessage> findByUserLikeAndReseiverIdLike(User user, Integer receiverId);
+    List<UserMessage> findUserMessageByReseiverId(Integer id);
+
+    List<UserMessage> findUserMessageByUser(User user);
 }

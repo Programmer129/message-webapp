@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,19 +25,19 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping(path = "/get-images", headers = "content-type=multipart/*")
-    public List<Resource> getUserImages() {
-        return service.getUserImages();
+    @GetMapping(path = "/{id}/get-images", headers = "content-type=multipart/*")
+    public List<Resource> getUserImages(@PathVariable Integer id) {
+        return service.getUserImages(id);
     }
 
-    @GetMapping(path = "/get-users")
-    public Iterable<UserRegisterDTO> getUsers() {
-        return service.getUsers();
+    @GetMapping(path = "/{id}/get-users")
+    public Iterable<UserRegisterDTO> getUsers(@PathVariable Integer id) {
+        return service.getUsers(id);
     }
 
-    @GetMapping(path = "/get-user")
-    public UserRegisterDTO getUser() {
-        return service.getUser();
+    @GetMapping(path = "/{id}/get-user")
+    public UserRegisterDTO getUser(@PathVariable Integer id) {
+        return service.getUser(id);
     }
 
     @PostMapping(path = "/update-balance")

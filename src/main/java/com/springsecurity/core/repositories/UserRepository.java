@@ -17,7 +17,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     User findFirstByOrderByUserIdDesc();
 
-    List<User> findByUserIdNotLike(Integer id);
+    List<User> findUserByUserIdNotLike(Integer userId);
 
     User findByUserId(Integer id);
 }

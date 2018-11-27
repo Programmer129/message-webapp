@@ -39,21 +39,20 @@ public class UserService {
     }
 
     @Transactional
-    public Iterable<UserRegisterDTO> getUsers() {
-        User user = repository.findByUserName(getCurrentUserName());
-        List<User> list = repository.findByUserIdNotLike(user.getUserId());
+    public Iterable<UserRegisterDTO> getUsers(Integer id) {
+        List<User> list = repository.findUserByUserIdNotLike(id);
         return list.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Transactional
-    public UserRegisterDTO getUser() {
-        User user = repository.findByUserName(getCurrentUserName());
+    public UserRegisterDTO getUser(Integer id) {
+        User user = repository.findByUserId(id);
 
         return mapToDTO(user);
     }
 
     private String getCurrentUserName() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+      return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     private UserRegisterDTO mapToDTO(User user) {
@@ -87,9 +86,8 @@ public class UserService {
         return HttpStatus.OK;
     }
 
-    public List<Resource> getUserImages() {
-        User user = repository.findByUserName(getCurrentUserName());
-        List<User> list = repository.findByUserIdNotLike(user.getUserId());
+    public List<Resource> getUserImages(Integer id) {
+        List<User> list = repository.findUserByUserIdNotLike(id);
         List<Resource> resources = new ArrayList<>();
         for (User user1 : list) {
             File file = new File("/home/levani/IdeaProjects/core/src/main/resources/profile" + user1.getUserName()+".png");

@@ -54,10 +54,15 @@ public class LoginService {
         UserLoginDTO userDTO = new UserLoginDTO();
         userDTO.setUserName(result.getUserName());
         userDTO.setPassword(result.getPassword());
+        userDTO.setUserId(result.getUserId());
         userDTO.setToken(tokenProvider.generateToken(loginDTO));
-        Authentication authenticate =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        try {
+            Authentication authenticate =
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authenticate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return userDTO;
     }
 

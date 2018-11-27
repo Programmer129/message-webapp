@@ -9,6 +9,9 @@ public class UserLoginDTO {
     @JsonProperty("userName")
     private String userName;
 
+    @JsonProperty("userId")
+    private Integer userId;
+
     @JsonProperty("password")
     private String password;
 
