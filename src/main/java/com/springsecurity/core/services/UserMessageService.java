@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class UserMessageService {
         message.setUser(user);
         message.setReseiverId(messageDTO.getReseiverId());
         message.setMessage(messageDTO.getMessage());
-        message.setSendDate(messageDTO.getSendDate());
+        message.setSendDate(new Date());
 
         UserMessage save = messageRepository.save(message);
 
