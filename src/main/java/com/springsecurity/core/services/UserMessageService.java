@@ -22,11 +22,15 @@ public class UserMessageService {
 
     private final UserRepository userRepository;
     private final UserMessageRepository messageRepository;
+    private final OneSignalService oneSignalService;
 
     @Autowired
-    public UserMessageService(UserMessageRepository messageRepository, UserRepository userRepository) {
+    public UserMessageService(UserMessageRepository messageRepository,
+                              UserRepository userRepository,
+                              OneSignalService oneSignalService) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
+        this.oneSignalService = oneSignalService;
     }
 
     @Transactional
@@ -45,6 +49,8 @@ public class UserMessageService {
         messageDTO.setReseiverId(save.getReseiverId());
         messageDTO.setMessage(save.getMessage());
         messageDTO.setSendDate(save.getSendDate());
+
+        oneSignalService.sendNotification(user.getUserName(), save.getMessage());
 
         return messageDTO;
     }
