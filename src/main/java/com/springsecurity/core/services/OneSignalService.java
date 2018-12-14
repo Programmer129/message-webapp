@@ -14,6 +14,11 @@ public class OneSignalService {
 
     private Map<String, String> players = new HashMap<>();
 
+    public OneSignalService() {
+        players.put("avto123", "b1ea54a0-1bc4-41ba-b065-bcb27b3677a2");
+        players.put("user", "ace5ebe4-c9e4-46c0-940c-729e9783b613");
+    }
+
     public void sendNotification(String sender, String message) {
         try {
             String jsonResponse;
@@ -30,7 +35,7 @@ public class OneSignalService {
 
             String strJsonBody = "{"
                     +   "\"app_id\": \"096b3037-53bd-4df3-b012-c1f97e51fd35\","
-                    +   "\"include_player_ids\": [\"ace5ebe4-c9e4-46c0-940c-729e9783b613\"],"
+                    +   "\"include_player_ids\": [\"" + players.get(sender) + "\"],"
                     +   "\"data\": {\"from\": \"" + sender + "\"},"
                     +   "\"contents\": {\"en\": \"" + sender.concat(": ").concat(message) + "\"}"
                     + "}";
